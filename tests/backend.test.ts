@@ -153,3 +153,20 @@ test("unapproved live client cannot construct a network context even if instanti
     (e: any) => e.code === "LIVE_DISABLED",
   );
 });
+
+test("live catalog HTTP 404 uses the full provided snapshot with explicit source and warning", async () => {
+  let gets = 0;
+  const client = new CatalogClient(config, async () => ({
+    get: async () => {
+      gets++;
+      return { ok: () => false, status: () => 404, json: async () => ({}) };
+    },
+    dispose: async () => {},
+  }));
+  const result = await client.load();
+  assert.equal(gets, 1);
+  assert.equal(result.mode, "live");
+  assert.equal(result.source, "attached-fixture-fallback");
+  assert.equal(result.services.length, 166);
+  assert.match(result.warning!, /HTTP 404/);
+});

@@ -4,8 +4,10 @@ import { PlatformBadge } from "./ServiceCard.tsx";
 export function ServicePicker({
   services,
   onSelect,
+  selectedCodes,
 }: {
   services: Service[];
+  selectedCodes: string[];
   onSelect: (service: Service) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -42,8 +44,6 @@ export function ServicePicker({
         ?.scrollIntoView({ block: "nearest" });
   }, [active, open, id]);
   function choose(service: Service) {
-    setOpen(false);
-    trigger.current?.focus();
     onSelect(service);
   }
   return (
@@ -58,10 +58,10 @@ export function ServicePicker({
         }
       }}
     >
-      <label id={`${id}-label`}>Choose a service</label>
+      <label id={`${id}-label`}>Select services to add</label>
       <p>
-        Select a catalog service to inspect its details. Activation is not
-        enabled.
+        Choose one or more services. The Add button prepares a local preview
+        only.
       </p>
       <button
         ref={trigger}
@@ -155,6 +155,7 @@ export function ServicePicker({
           <div
             id={`${id}-options`}
             role="listbox"
+            aria-multiselectable="true"
             aria-labelledby={`${id}-label`}
             className="picker-options"
           >
@@ -163,14 +164,17 @@ export function ServicePicker({
                 type="button"
                 role="option"
                 tabIndex={-1}
-                aria-selected={active === index}
+                aria-selected={selectedCodes.includes(service.code)}
                 id={`${id}-${index}`}
                 key={service.id}
-                className="picker-option"
+                className={`picker-option ${active === index ? "keyboard-active" : ""}`}
                 onClick={() => choose(service)}
               >
                 <span>
-                  <strong>{service.name}</strong>
+                  <strong>
+                    {selectedCodes.includes(service.code) ? "☑ " : "☐ "}
+                    {service.name}
+                  </strong>
                   <code>{service.code}</code>
                 </span>
                 <PlatformBadge platform={service.platform} />

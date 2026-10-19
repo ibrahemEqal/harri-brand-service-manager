@@ -21,6 +21,8 @@ function App() {
   const [catalog, setCatalog] = useState<CatalogResponse | null>(null);
   const [error, setError] = useState<RequestError | null>(null);
   const [loading, setLoading] = useState(false);
+  const [chosenCodes, setChosenCodes] = useState<string[]>([]);
+  const [addPreview, setAddPreview] = useState(false);
   const [selected, setSelected] = useState<Service | null>(null);
   const controller = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -45,6 +47,8 @@ function App() {
     setError(null);
     setCatalog(null);
     setSelected(null);
+    setChosenCodes([]);
+    setAddPreview(false);
     setSubmittedId(brandId);
     setBrandError("");
     setBrandResult(null);
@@ -129,12 +133,16 @@ function App() {
             <div>
               <strong>
                 {mode === "live"
-                  ? "Live catalog · global scope"
+                  ? catalog?.source === "attached-fixture-fallback"
+                    ? "Live Brand · catalog snapshot"
+                    : "Live connection · global catalog"
                   : "Mock catalog · full attached response"}
               </strong>
               <p>
                 {mode === "live"
-                  ? "Catalog data comes from Harri Prep. "
+                  ? catalog?.source === "attached-fixture-fallback"
+                    ? "The live catalog is unavailable; services below come from the provided snapshot. "
+                    : "Brand details and catalog are requested from Harri Prep. "
                   : "Fixture data is served by the local backend. "}
                 Brand details are loaded separately. Catalog entries do not
                 indicate Brand activation.
@@ -167,6 +175,8 @@ function App() {
                   onChange={(event) => {
                     setBrandId(event.target.value);
                     setBrandResult(null);
+                    setChosenCodes([]);
+                    setAddPreview(false);
                     setBrandError("");
                     setSubmittedId("");
                   }}
@@ -273,9 +283,9 @@ function App() {
               {catalog && (
                 <span className="updated">
                   Loaded {new Date(catalog.fetchedAt).toLocaleTimeString()} ·{" "}
-                  {catalog.source === "attached-fixture"
-                    ? "Attached fixture"
-                    : "Harri Prep API"}
+                  {catalog.source === "harri-prep"
+                    ? "Harri Prep API"
+                    : "Provided catalog snapshot"}
                 </span>
               )}
             </div>
@@ -319,7 +329,97 @@ function App() {
                 </span>
               </div>
             ) : services.length ? (
-              <ServicePicker services={services} onSelect={setSelected} />
+              <>
+                {catalog.warning && (
+                  <div className="catalog-fallback" role="status">
+                    {catalog.warning}
+                  </div>
+                )}
+                <ServicePicker
+                  services={services}
+                  selectedCodes={chosenCodes}
+                  onSelect={(service) => {
+                    setAddPreview(false);
+                    setChosenCodes((previous) =>
+                      previous.includes(service.code)
+                        ? previous.filter((code) => code !== service.code)
+                        : [...previous, service.code],
+                    );
+                  }}
+                />
+                <section
+                  className="selection-summary panel"
+                  aria-label="Selected services"
+                >
+                  <h3>Selected services ({chosenCodes.length})</h3>
+                  {chosenCodes.length === 0 ? (
+                    <p>Choose services from the dropdown above.</p>
+                  ) : (
+                    <ul>
+                      {chosenCodes.map((code) => {
+                        const service = services.find(
+                          (item) => item.code === code,
+                        )!;
+                        return (
+                          <li key={code}>
+                            <div>
+                              <strong>{service.name}</strong>
+                              <code>{service.code}</code>
+                            </div>
+                            <div className="selection-actions">
+                              <button
+                                type="button"
+                                onClick={() => setSelected(service)}
+                              >
+                                Details
+                              </button>
+                              <button
+                                type="button"
+                                aria-label={`Remove ${service.name}`}
+                                onClick={() => {
+                                  setChosenCodes((previous) =>
+                                    previous.filter((item) => item !== code),
+                                  );
+                                  setAddPreview(false);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                  <div className="selection-add-row">
+                    <p>
+                      Brand: {brandResult?.brand.name ?? "Load a Brand first"}
+                      {brandResult ? ` · ${brandResult.brand.id}` : ""}
+                    </p>
+                    <button
+                      type="button"
+                      className="primary"
+                      disabled={!brandResult || !chosenCodes.length}
+                      onClick={() => setAddPreview(true)}
+                    >
+                      إضافة الخدمات (Preview)
+                    </button>
+                  </div>
+                  <small>
+                    Preview only. No activation requests are sent to Harri.
+                  </small>
+                  {addPreview && (
+                    <div className="local-add-preview" role="status">
+                      <strong>
+                        معاينة إضافة {chosenCodes.length} خدمة للبراند{" "}
+                        {brandResult?.brand.id}
+                      </strong>
+                      <p>{chosenCodes.join(", ")}</p>
+                      <p>واجهة فقط — لم تُرسل أي طلبات إضافة إلى Harri.</p>
+                    </div>
+                  )}
+                </section>
+              </>
             ) : (
               <div className="empty-state panel">
                 <h3>The catalog is empty</h3>

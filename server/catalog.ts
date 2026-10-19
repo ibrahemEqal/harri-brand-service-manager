@@ -18,6 +18,7 @@ export class ApiError extends Error {
     public status: number,
     public code: string,
     message: string,
+    public upstreamStatus?: number,
   ) {
     super(message);
   }
@@ -96,6 +97,7 @@ export class CatalogClient {
           502,
           "UPSTREAM_ERROR",
           `Harri ${kind.toLowerCase()} request failed (HTTP ${status}). Try again later.`,
+          status,
         );
       try {
         return await response.json();
@@ -136,6 +138,27 @@ export class CatalogClient {
         services: parseCatalog(body),
       };
     } catch (error) {
+      if (
+        this.mode === "live" &&
+        error instanceof ApiError &&
+        error.upstreamStatus === 404
+      ) {
+        const fixture = JSON.parse(
+          await readFile(
+            new URL("../fixtures/services.json", import.meta.url),
+            "utf8",
+          ),
+        );
+        return {
+          mode: "live",
+          scope: "global",
+          source: "attached-fixture-fallback",
+          fetchedAt: new Date().toISOString(),
+          services: parseCatalog(fixture),
+          warning:
+            "Harri catalog returned HTTP 404. Showing the complete provided catalog snapshot; service availability is not verified live.",
+        };
+      }
       if (error instanceof ApiError) throw error;
       if (error instanceof CatalogValidationError)
         throw new ApiError(

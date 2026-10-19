@@ -20,7 +20,8 @@ export type OperatingMode = "mock" | "live";
 export interface CatalogResponse {
   mode: OperatingMode;
   scope: "global";
-  source: "attached-fixture" | "harri-prep";
+  source: "attached-fixture" | "harri-prep" | "attached-fixture-fallback";
+  warning?: string;
   fetchedAt: string;
   services: Service[];
 }

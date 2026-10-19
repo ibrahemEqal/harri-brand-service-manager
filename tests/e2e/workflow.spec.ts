@@ -30,13 +30,36 @@ test("readable Brand overview and searchable dropdown replace the full catalog g
   await search.fill("HARRI_AI_SUMMARY");
   await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(1);
   await search.press("Enter");
+  await expect(
+    page.getByRole("heading", { name: "Selected services (1)", exact: true }),
+  ).toBeVisible();
+  await search.fill("POS");
+  await page
+    .getByRole("listbox")
+    .getByRole("option")
+    .filter({ has: page.locator("code", { hasText: /^POS$/ }) })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Selected services (2)", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Details", exact: true })
+    .first()
+    .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Group 5", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(trigger).toBeFocused();
+  await page
+    .getByRole("button", { name: "إضافة الخدمات (Preview)", exact: true })
+    .click();
+  await expect(
+    page.getByText("واجهة فقط — لم تُرسل أي طلبات إضافة إلى Harri.", {
+      exact: true,
+    }),
+  ).toBeVisible();
   await trigger.click();
   await search.fill("");
   await page.getByLabel("Platform", { exact: true }).selectOption("TEAM");

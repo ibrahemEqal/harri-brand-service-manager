@@ -1,0 +1,11 @@
+{
+  "data": {
+    "id": 18619889, "name": "sds", "type": "brand", "status": "ACTIVE",
+    "email": null, "created": "2026-10-19T08:55:10.377911", "slug": "Sds-3b",
+    "phone": null, "description": "ggggg", "group_id": 18619889,
+    "updated": "2026-10-19T08:55:35.724737", "url": null,
+    "hecs": [{"id": 7, "name": "Chain Family", "code": "HECS151"}],
+    "general_settings": {"start_day_of_week": null, "is_billable": true, "time_zone": {"id": 132, "name": "Europe/Berlin"}},
+    "currency": {"id": 1, "name": "US Dollar", "code": "USD"}, "is_archived": false
+  }
+}

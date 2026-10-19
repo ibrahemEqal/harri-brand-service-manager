@@ -1,0 +1,462 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  filterServices,
+  hasRelationships,
+  type CatalogResponse,
+  type OperatingMode,
+  type Service,
+} from "../shared/catalog.ts";
+import type { BrandResponse } from "../shared/brand.ts";
+import { BrandOverview } from "./components/BrandOverview.tsx";
+import { ServiceCard } from "./components/ServiceCard.tsx";
+import { ServiceDetails } from "./components/ServiceDetails.tsx";
+import { getJson, RequestError } from "./api.ts";
+import "./style.css";
+function App() {
+  const [mode, setMode] = useState<OperatingMode | null>(null);
+  const [brandId, setBrandId] = useState("");
+  const [submittedId, setSubmittedId] = useState("");
+  const [brandError, setBrandError] = useState("");
+  const [brandResult, setBrandResult] = useState<BrandResponse | null>(null);
+  const [catalog, setCatalog] = useState<CatalogResponse | null>(null);
+  const [error, setError] = useState<RequestError | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [serviceMode, setServiceMode] = useState("");
+  const [sort, setSort] = useState<"asc" | "desc">("asc");
+  const [selected, setSelected] = useState<Service | null>(null);
+  const controller = useRef<AbortController | null>(null);
+  useEffect(() => {
+    const statusController = new AbortController();
+    getJson<{ mode: OperatingMode }>("/api/status", statusController.signal)
+      .then((status) => setMode(status.mode))
+      .catch(() => {});
+    return () => {
+      statusController.abort();
+      controller.current?.abort();
+    };
+  }, []);
+  const services = catalog?.services ?? [];
+  const filtered = useMemo(
+    () =>
+      filterServices(services, { query, platform, mode: serviceMode, sort }),
+    [catalog, query, platform, serviceMode, sort],
+  );
+  const modes = [...new Set(services.map((service) => service.mode))].sort();
+  const platforms = [
+    ...new Set(services.map((service) => service.platform)),
+  ].sort();
+  const validBrandId =
+    /^[1-9]\d{0,15}$/.test(brandId) && Number.isSafeInteger(Number(brandId));
+  async function load() {
+    if (!validBrandId || loading) return;
+    controller.current?.abort();
+    const requestController = new AbortController();
+    controller.current = requestController;
+    setLoading(true);
+    setError(null);
+    setCatalog(null);
+    setSelected(null);
+    setSubmittedId(brandId);
+    setBrandError("");
+    setBrandResult(null);
+    const [brand, result] = await Promise.allSettled([
+      getJson<BrandResponse>(
+        `/api/brand?brandId=${encodeURIComponent(brandId)}`,
+        requestController.signal,
+      ),
+      getJson<CatalogResponse>("/api/services", requestController.signal),
+    ]);
+    if (requestController.signal.aborted) return;
+    if (brand.status === "fulfilled") setBrandResult(brand.value);
+    else
+      setBrandError(
+        brand.reason instanceof Error
+          ? brand.reason.message
+          : "Brand lookup could not be completed.",
+      );
+    if (result.status === "fulfilled") {
+      setCatalog(result.value);
+      setMode(result.value.mode);
+    } else
+      setError(
+        result.reason instanceof RequestError
+          ? result.reason
+          : new RequestError("REQUEST_FAILED", "Could not load services."),
+      );
+    setLoading(false);
+  }
+  function resetFilters() {
+    setQuery("");
+    setPlatform("");
+    setServiceMode("");
+    setSort("asc");
+  }
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <a href="#main" className="wordmark">
+          harri<span>ENGINEERING</span>
+        </a>
+        <div className="workspace-label">QA WORKSPACE</div>
+        <a className="nav-active" href="#catalog">
+          <span>▦</span> Service catalog <span className="nav-dot" />
+        </a>
+        <div className="sidebar-context">
+          <span className="tiny-dot" /> HARRI PREP<p>Read-only environment</p>
+        </div>
+        <div className="sidebar-bottom">
+          <div className="avatar">QA</div>
+          <div>
+            Internal tooling<small>Brand Service Manager · v0.1</small>
+          </div>
+        </div>
+      </aside>
+      <div className="workspace">
+        <header className="topbar">
+          <div>
+            <span className="muted">Workspace</span>
+            <span className="slash">/</span>Brand Service Manager
+          </div>
+          <div className="header-badges">
+            <span className="readonly">◉ Read only</span>
+            <span className={`mode-badge ${mode === "live" ? "live" : ""}`}>
+              <i />
+              {mode ? `${mode.toUpperCase()} MODE` : "CONNECTING"}
+            </span>
+          </div>
+        </header>
+        <main id="main">
+          <div className="page-heading">
+            <div>
+              <div className="eyebrow">DEVELOPER TOOLS / SERVICE EXPLORER</div>
+              <h1>
+                Understand your service catalog<span>v0.1</span>
+              </h1>
+              <p>
+                Explore Harri services, prerequisites and dependencies in one
+                place.
+              </p>
+            </div>
+            <span className="environment-tag">
+              <span className="tiny-dot" /> Harri Prep
+            </span>
+          </div>
+          <div className="scope-banner">
+            <span className="banner-icon">ⓘ</span>
+            <div>
+              <strong>
+                {mode === "live"
+                  ? "Live catalog · global scope"
+                  : "Mock catalog · full attached response"}
+              </strong>
+              <p>
+                {mode === "live"
+                  ? "Catalog data comes from Harri Prep. "
+                  : "Fixture data is served by the local backend. "}
+                Brand details are loaded separately. Catalog entries do not
+                indicate Brand activation.
+              </p>
+            </div>
+          </div>
+          <section
+            className="brand-panel panel"
+            aria-labelledby="brand-heading"
+          >
+            <div className="brand-intro">
+              <div className="section-kicker">01 / BRAND CONTEXT</div>
+              <h2 id="brand-heading">Brand overview</h2>
+              <p>Retrieve Brand details and the complete global catalog.</p>
+            </div>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void load();
+              }}
+            >
+              <label htmlFor="brand-id">Brand ID</label>
+              <div className="brand-input-row">
+                <input
+                  id="brand-id"
+                  inputMode="numeric"
+                  value={brandId}
+                  placeholder="e.g. 18619889"
+                  disabled={loading}
+                  onChange={(event) => {
+                    setBrandId(event.target.value);
+                    setBrandResult(null);
+                    setBrandError("");
+                    setSubmittedId("");
+                  }}
+                  aria-describedby="brand-help"
+                />
+                <button className="primary" disabled={!validBrandId || loading}>
+                  {loading ? "Loading…" : "Load Services"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+              <small id="brand-help">
+                {mode === "mock"
+                  ? "Mock snapshot: use Brand ID 18619889. No Harri requests."
+                  : "Brand details are retrieved through the local backend. GET requests only."}
+              </small>
+            </form>
+          </section>
+          {brandResult && <BrandOverview result={brandResult} />}
+          {brandError && (
+            <div className="brand-error" role="alert">
+              <strong>
+                Brand lookup failed{submittedId ? ` · ID ${submittedId}` : ""}
+              </strong>
+              <p>{brandError}</p>
+              <p>
+                No Brand data is displayed. The global catalog, if loaded, is
+                independent of this lookup.
+              </p>
+            </div>
+          )}
+          {!brandResult && !brandError && !loading && (
+            <div className="brand-placeholder">
+              No Brand loaded. Enter an ID above.{" "}
+              {mode === "mock"
+                ? "Use 18619889 for the provided mock snapshot."
+                : "Live requests require server-side authorization."}
+            </div>
+          )}
+          <div className="assigned-status">
+            <span className="pending-badge">
+              Assigned services: unavailable
+            </span>
+            <p>
+              No Brand-specific service-read endpoint has been confirmed. The
+              catalog below does not mark services active or inactive.
+            </p>
+          </div>
+          <div className="stats" aria-label="Catalog statistics">
+            {[
+              {
+                label: "Total services",
+                value: catalog ? services.length : "—",
+                sub: "Across the global catalog",
+                icon: "▦",
+              },
+              {
+                label: "Harri platform",
+                value: catalog
+                  ? services.filter((s) => s.platform === "HARRI").length
+                  : "—",
+                sub: "HARRI services",
+                icon: "H",
+              },
+              {
+                label: "Team platform",
+                value: catalog
+                  ? services.filter((s) => s.platform === "TEAM").length
+                  : "—",
+                sub: "TEAM services",
+                icon: "T",
+              },
+              {
+                label: "With relationships",
+                value: catalog ? services.filter(hasRelationships).length : "—",
+                sub: "Dependencies or exclusions",
+                icon: "⌘",
+              },
+            ].map((stat) => (
+              <div className="stat panel" key={stat.label}>
+                <div>
+                  <span>{stat.label}</span>
+                  <strong>{stat.value}</strong>
+                  <small>{stat.sub}</small>
+                </div>
+                <span className="stat-icon">{stat.icon}</span>
+              </div>
+            ))}
+          </div>
+          <section
+            id="catalog"
+            className="catalog-section"
+            aria-labelledby="catalog-heading"
+          >
+            <div className="catalog-title">
+              <div>
+                <div className="section-kicker">02 / GLOBAL CATALOG</div>
+                <h2 id="catalog-heading">
+                  Services{" "}
+                  <span className="count-pill">
+                    {catalog ? services.length : "—"}
+                  </span>
+                </h2>
+              </div>
+              {catalog && (
+                <span className="updated">
+                  Loaded {new Date(catalog.fetchedAt).toLocaleTimeString()} ·{" "}
+                  {catalog.source === "attached-fixture"
+                    ? "Attached fixture"
+                    : "Harri Prep API"}
+                </span>
+              )}
+            </div>
+            <div className="filters panel">
+              <div className="search-wrap">
+                <span aria-hidden="true">⌕</span>
+                <input
+                  aria-label="Search services"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search name, code or description…"
+                  disabled={!catalog}
+                />
+              </div>
+              <label>
+                <span className="sr-only">Platform</span>
+                <select
+                  aria-label="Platform"
+                  value={platform}
+                  onChange={(event) => setPlatform(event.target.value)}
+                  disabled={!catalog}
+                >
+                  <option value="">All platforms</option>
+                  {platforms.map((value) => (
+                    <option key={value}>{value}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="sr-only">Service mode</span>
+                <select
+                  aria-label="Service mode"
+                  value={serviceMode}
+                  onChange={(event) => setServiceMode(event.target.value)}
+                  disabled={!catalog}
+                >
+                  <option value="">All service modes</option>
+                  {modes.map((value) => (
+                    <option key={value}>{value}</option>
+                  ))}
+                </select>
+              </label>
+              <select
+                aria-label="Sort services"
+                value={sort}
+                onChange={(event) =>
+                  setSort(event.target.value as "asc" | "desc")
+                }
+                disabled={!catalog}
+              >
+                <option value="asc">Name: A–Z</option>
+                <option value="desc">Name: Z–A</option>
+              </select>
+            </div>
+            {error ? (
+              <div className="empty-state error-state panel" role="alert">
+                <span className="state-icon">!</span>
+                <h3>
+                  {error.code === "AUTHENTICATION_ERROR"
+                    ? "Authentication required"
+                    : error.code === "ACCESS_DENIED"
+                      ? "Access denied"
+                      : "Unable to load the catalog"}
+                </h3>
+                <p>{error.message}</p>
+                <button onClick={() => void load()} disabled={!validBrandId}>
+                  Try again
+                </button>
+              </div>
+            ) : loading ? (
+              <div aria-live="polite" aria-busy="true">
+                <p className="result-count" role="status">
+                  Loading catalog from{" "}
+                  {mode === "live" ? "Harri Prep" : "the local fixture"}…
+                </p>
+                <div className="service-grid">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <div className="skeleton panel" key={i}>
+                      <div />
+                      <div />
+                      <div />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : !catalog ? (
+              <div className="empty-state panel">
+                <span className="state-icon">▦</span>
+                <h3>Your catalog, ready to explore</h3>
+                <p>
+                  Enter a Brand ID and choose Load Services.
+                  <br />
+                  The complete global catalog will appear here.
+                </p>
+                <span className="empty-note">
+                  Brand details + global catalog · Read-only GET requests
+                </span>
+              </div>
+            ) : (
+              <>
+                <div className="result-bar">
+                  <p className="result-count" role="status">
+                    Showing <strong>{filtered.length}</strong> of{" "}
+                    {services.length} services
+                  </p>
+                  {(query || platform || serviceMode || sort !== "asc") && (
+                    <button className="text-button" onClick={resetFilters}>
+                      Reset filters
+                    </button>
+                  )}
+                  <span>Activation status unavailable</span>
+                </div>
+                {filtered.length ? (
+                  <div className="service-grid">
+                    {filtered.map((service) => (
+                      <ServiceCard
+                        key={service.id}
+                        service={service}
+                        onOpen={() => setSelected(service)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state panel">
+                    <span className="state-icon">⌕</span>
+                    <h3>
+                      {services.length
+                        ? "No matching services"
+                        : "The catalog is empty"}
+                    </h3>
+                    <p>
+                      {services.length
+                        ? "Try a different search or clear your filters."
+                        : "The API returned an empty services array."}
+                    </p>
+                    {services.length > 0 && (
+                      <button onClick={resetFilters}>Reset filters</button>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+          <footer>
+            <span>
+              Harri Brand Service Manager <b>v0.1</b>
+            </span>
+            <span>
+              Internal QA tooling · Read only · No activation operations
+            </span>
+          </footer>
+        </main>
+      </div>
+      {selected && (
+        <ServiceDetails service={selected} onClose={() => setSelected(null)} />
+      )}
+    </div>
+  );
+}
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

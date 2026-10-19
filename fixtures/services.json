@@ -1,0 +1,3791 @@
+{
+    "data": {
+        "services": [
+            {
+                "id": 1,
+                "name": "Digital Application",
+                "code": "SECOND_PHASE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Requires the candidate to fill general info about themselves before selecting a time for an interview (upon client request)",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 3,
+                "name": "On Boarding",
+                "code": "ON_BOARDING",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Enables Documents (formerly My Docs) & shows the Offer & onboarding column in AMS to collect candidates information. Different groups of documents based on region/jurisdiction are ready at service activation time.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 4,
+                "name": "Group Career Portal",
+                "code": "GROUP_CAREER_PORTAL",
+                "platform": "HARRI",
+                "mode": "GP_OR_PARENT_ONLY",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Provides a branded, user-friendly interface for job seekers to explore career opportunities within the company. The page settings will be customized for the employer via this service",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 5,
+                "name": "Job Distributor",
+                "code": "JOB_DISTRIBUTOR",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Enables distributing the Job post that is posted on Harri to other Job board sites. Service allows job posters to opt out of organic job boards. Can add CC for North American Premium boards (US only).",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 6,
+                "name": "Payroll",
+                "code": "PAYROLL",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "NEW HIRE / Connects to a payroll system, enabling the employer to send the employees info to the payroll system. Pay Data Sheet (PDS) allows users to send pay data to their payroll provider",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 160,
+                            "name": "CoreHR Payroll",
+                            "code": "CORE_HR_UPDATES_INTEGRATION",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 8,
+                "name": "Privacy Shield",
+                "code": "PRIVACY_SHIELD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It will hide some parts of the system for the candidate. so that candidates applying through a career portal will not see the Jobs page to apply to somewhere else, and Harri will not brand all emails sent to them (it will be signed by the employer instead) / Blocks candidate from receiving Harri Job Marketing",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 10,
+                "name": "Team Scheduling",
+                "code": "TEAM_SCHEDULING",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Adds the ability to add schedules, together with breaks, Holiday/ Time off, availability and Schedule warnings, amongst other.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 11,
+                "name": "UK job message",
+                "code": "UK_JOB_MESSAGE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Changes the name we display on the job application to show the group name rather than the location name",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 12,
+                "name": "TTS Dashboard",
+                "code": "TTS_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Adds Launchpad to Navigation, required for many other services to properly function",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 13,
+                "name": "Onboarding Restrictions",
+                "code": "HIRING_RESTRICTION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows the ability to block hiring managers from moving new hires to OB swimlane under the following conditions to choose from: No signed offer, any pending E-sign documents and/or under -age applicant without at least one attached document",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 15,
+                "name": "Auto Load Offer Template",
+                "code": "AUTO_LOAD_OFFER_TEMPLATE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows for Offer Templates to preload based on criteria set by the template when a candidate is dropped in the Offer Column. Fields and offer description (body text) are editable based on permission.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 16,
+                "name": "Custom Swimlanes",
+                "code": "CUSTOM_SWIMLANE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows the addition of custom swimlanes in the AMS (applicant management system). Custom swimlanes can be added to individual jobs or from Brand Settings and applied to all jobs. Custom columns can include a message template sent to candidates upon placement in the column. Can include attachments",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 17,
+                "name": "Resume Preview",
+                "code": "RESUME_PREVIEW",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "The ability to preview the candidate resume directly in the speedy screen. Harri also parses resumes into the applicants’ profile / overview details in the speedy screen.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 18,
+                "name": "Daily job report email",
+                "code": "DAILY_JOB_REPORT",
+                "platform": "HARRI",
+                "mode": "PARENT_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Sends an email to managers summarizing their published jobs (by access and settings) and used job boards.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 20,
+                "name": "Harri Clock",
+                "code": "HARRI_CLOCK",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Activates the time clock via TeamHub. Configures pay frequency, payroll (provider, export type and other settings), missed shift reasons, tips pool, earnings codes and cost centers. ",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 21,
+                "name": "Right to work",
+                "code": "RIGHT_TO_WORK",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Helps employers ensure compliance with right to work regulations by providing a streamlined process for verifying and managing employees' right to work documentation. ",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 26,
+                            "name": "Keesing",
+                            "code": "KEESING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 63,
+                            "name": "Trust ID full",
+                            "code": "TRUST_ID_FULL",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 23,
+                "name": "Payroll Sync",
+                "code": "PAYROLL_SYNC",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 6,
+                            "name": "Payroll",
+                            "code": "PAYROLL",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 24,
+                "name": "ATR",
+                "code": "ATR",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It allows the administrative and financial information about a job post to be fed through to senior approvers in a business before being able to post a job.",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 171,
+                            "name": "Automated onboarding",
+                            "code": "AUTOMATED_ONBOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 25,
+                "name": "E-Verify",
+                "code": "E_VERIFY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows initiation of e-verify process from the Onboarding swimlane to verify I9 documentation and eligibility to work. E-verify training, status updates, and reports all visible in Harri UI.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 63,
+                            "name": "Trust ID full",
+                            "code": "TRUST_ID_FULL",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 64,
+                            "name": "Trust ID Lite",
+                            "code": "TRUST_ID_LITE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 27,
+                "name": "HARAF Funnel Restriction",
+                "code": "HARAF_RESTRICTION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 28,
+                "name": "Tips Distribution",
+                "code": "TIPS_DISTRIBUTION",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 134,
+                            "name": "Tips Management",
+                            "code": "TIPS_MANAGEMENT",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 30,
+                "name": "Assessment",
+                "code": "ASSESSMENT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Adds a swimlane that will send links to personality assessments of integrated partners. Results can be displayed in harri UI.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 31,
+                "name": "Automated Screening Questions",
+                "code": "AQAAF",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows managers to create screening questions templates per position, where each question set can have its own settings and questions [knocked-out questions & scored questions]. Managers may determine the flow or next stage the applicant would go through according to his score.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 32,
+                "name": "Forced Job Templates",
+                "code": "FORCED_JOB_TEMPLATE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 33,
+                "name": "Reason to skip",
+                "code": "REASON_TO_SKIP",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Adds a settings section in Talent Acquisition Settings, when you skip a candidate in AMS you'll be able to set a reason to the candidate's application for review. Users add their own reasons in the UI. Can be made required.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 34,
+                "name": "Rejection templates",
+                "code": "REJECTION_TEMPLATES",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "The ability of sending rejection messages upon skipping candidates. Templates managed in top-level settings. Can be made required. Delay times up to 24 hours possible.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 35,
+                "name": "Employee Pool",
+                "code": "EMPLOYEE_POOL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows employees to clock in on other locations for the same brand without being shared",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 36,
+                "name": "Job Postings Options",
+                "code": "PRIVATE_JOB_POST",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It activates features for managing internal job postings, including internal/external posting options, live publishing dates, application tracking, and reporting.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 37,
+                "name": "Advanced Interview Scheduling",
+                "code": "INTERVIEW_V2",
+                "platform": "HARRI",
+                "mode": "PARENT_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Adds enhanced features and functionalities to our existing interview scheduling, allowing job posters to: Add interviewers, update an interview status, create and manage open days, add phone interview scheduling to phone /screen swimlane, add second interview swimlane and/or set custom interview durations",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 40,
+                "name": "TCAF",
+                "code": "TCAF",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Requires managers to attest to change in Time Cards, Employees agree or protest changes on next clock in. Provides audit to all Time Card changes. Provides transparency, compliance control, and reduces retro pay. Breaks and Premiums attestations can be configured in backend settings and/or UI.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 41,
+                "name": "LOGJAM",
+                "code": "LOGJAM",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "an enhancement to job post pre-post settings and job post lifetimes that allows users to configure job lifetime values options, and automatically renew evergreen job postings on Harri & other job boards, amongst other.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 42,
+                "name": "Activity Based Scheduling",
+                "code": "ACTIVITY_BASED_SCHEDULING",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Generates shifts by position and for fixed / guide hours based on the weekly sales forecast and adjustments and the client’s labor model.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 49,
+                            "name": "Par Labor",
+                            "code": "PAR_LABOR",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 101,
+                            "name": "Wendys Labor Model",
+                            "code": "WENDYS_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 117,
+                            "name": "MCD Labor Model",
+                            "code": "MCD_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 135,
+                            "name": "Gastronomy Labor Model",
+                            "code": "GASTRONOMY_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 146,
+                            "name": "Carrol Labor Model",
+                            "code": "CARROL_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 43,
+                "name": "Raw Data Reporting",
+                "code": "RAW_DATA_REPORTING",
+                "platform": "HARRI",
+                "mode": "GP_ONLY",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Adds the ability to pull reports from all enterprises below the GP, including unfilled, filled & live vacancies, time in workflow, and AQAAF reporting.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 44,
+                "name": "General Data Protection Regulation",
+                "code": "GDPR",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Add applicable disclaimers (harri default is all): login/signup, job post, email privacy, job apply, job alert & job apply consent. harri standard text must then be added. ",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 45,
+                "name": "Force Media",
+                "code": "FORCE_MEDIA",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 46,
+                "name": "Interview Questions",
+                "code": "QUESTION_BANK",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows users to add Interview question types (i.e. question categories), a question bank, and interview templates. Templates can be set per position(s) also indicate which questions from the bank are scored / required and not.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 47,
+                "name": "Forced Password",
+                "code": "FORCED_PASSWORD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Expires the session for the Harri Hire app and requires the user to log in again after 15 minutes or if the app is killed.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 48,
+                "name": "Download CV/s",
+                "code": "DOWNLOAD_CVS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows Admins to download and review CVs/Resumes, enables Applicants to upload resumes and harri parses",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 49,
+                "name": "Par Labor",
+                "code": "PAR_LABOR",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows for Par to be added as template to schedules",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 50,
+                "name": "Daily Labor Analysis",
+                "code": "DAILY_LABOR_ANALYSIS",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 49,
+                            "name": "Par Labor",
+                            "code": "PAR_LABOR",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 67,
+                            "name": "POS",
+                            "code": "POS",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 52,
+                "name": "WorkPulse Sales",
+                "code": "WORK_PULSE_SALES",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 67,
+                            "name": "POS",
+                            "code": "POS",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 61,
+                "name": "HMAP Duplicate Application",
+                "code": "HMAP_DUPLICATE_APPLICATION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_GP_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows Managers to view Candidate applications from other enterprise locations",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 62,
+                "name": "No Password Quick Apply",
+                "code": "NO_PASSWORD_QUICK_APPLY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Accelerates “Apply” procedure by eliminating password field from the signup flow to decrease candidate dropoff at registration",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 63,
+                "name": "Trust ID full",
+                "code": "TRUST_ID_FULL",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Paid integration to help businesses verify the authenticity of documents, such as passports and visas, and ensure that employees are legally allowed to work.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 21,
+                            "name": "Right to work",
+                            "code": "RIGHT_TO_WORK",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 25,
+                            "name": "E-Verify",
+                            "code": "E_VERIFY",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 26,
+                            "name": "Keesing",
+                            "code": "KEESING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 64,
+                            "name": "Trust ID Lite",
+                            "code": "TRUST_ID_LITE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 64,
+                "name": "Trust ID Lite",
+                "code": "TRUST_ID_LITE",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Paid integration to help businesses verify the authenticity of documents, such as passports and visas, and ensure that employees are legally allowed to work.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 21,
+                            "name": "Right to work",
+                            "code": "RIGHT_TO_WORK",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 25,
+                            "name": "E-Verify",
+                            "code": "E_VERIFY",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 26,
+                            "name": "Keesing",
+                            "code": "KEESING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 63,
+                            "name": "Trust ID full",
+                            "code": "TRUST_ID_FULL",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 65,
+                "name": "Ready to offer column",
+                "code": "READY_TO_OFFER_COLUMN",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Adds Column to swimlane and notifies assigned admins a candidate offer letter can be sent",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 66,
+                "name": "Demand Forecasting",
+                "code": "DEMAND_FORECASTING",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Provides sales and guest forecasting based on Sales Feed or upload. This will generate a labor % on the schedule and variance reporting for actual vs forecasted sales (when POS sales feed is active). Adjustments can be made to distribute across an entire day.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 116,
+                            "name": "Sales Forecast Feed",
+                            "code": "SALES_FORECAST_FEED",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 67,
+                "name": "POS",
+                "code": "POS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "inbound feed of sales into Harri to inform demand forecasting and livewire data",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 52,
+                            "name": "WorkPulse Sales",
+                            "code": "WORK_PULSE_SALES",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 68,
+                "name": "Auto Import Employees",
+                "code": "TEAM_AUTO_IMPORT",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Sends data from ATS to CoreHR (creates the Employee My Team Card from the send to payroll action). This is a 1x action, it will not amend data once an employee has a My Team Card.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 69,
+                "name": "Team",
+                "code": "TEAM",
+                "platform": "TEAM",
+                "mode": "VIEW_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 70,
+                "name": "LMS",
+                "code": "LMS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "offers a centralized platform to deliver online training courses tailored to the skills needed in your business and industry. ",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 165,
+                            "name": "Upskill",
+                            "code": "UPSKILL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 190,
+                            "name": "Learning Management",
+                            "code": "HARRI_LEARNING_MANAGEMENT",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 12,
+                            "name": "TTS Dashboard",
+                            "code": "TTS_DASHBOARD",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    },
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 71,
+                "name": "Employee Referral",
+                "code": "SOCIAL_REFERRAL",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "All employees receive a unique referral link enabling them to share job posts via email and social media. Referred candidates are tracked. Notification cadences are available for HR incentives.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 72,
+                "name": "Video screening",
+                "code": "VIDEO_INTERVIEW",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Gives the ability to ask applicants to complete a video answering application questions. Instructions can include media, text and questions. User can create their own templates in Interview Questions Bank",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 73,
+                "name": "Budgeting",
+                "code": "SCHEDULE_BUDGETING",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows managers to upload the budget for a location, which will allow them to compare it with their forecasted and actual data. Template provided",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 74,
+                "name": "Background Check",
+                "code": "BACKGROUND_CHECK",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows delivery and receipt of background check to applicants through API",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 171,
+                            "name": "Automated onboarding",
+                            "code": "AUTOMATED_ONBOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 75,
+                "name": "Global Talent Pool",
+                "code": "GLOBAL_TALENT_POOL",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "A place for customers to retain candidates’ information who have or haven’t been selected for a job role. Managers can add tags (e.g. No Show or Excellent Customer Service Skills) to candidate profiles and search through previous candidates in the pool and invite them to apply to new job postings.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 76,
+                "name": "GP Cross Location",
+                "code": "GP_CROSS_LOCATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_GP_ONLY",
+                "apply_to_children_mode": "SINGLE_SELECTION",
+                "description": "Allows employees to be shared to locations under different Enterprises within the same HMAP",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 119,
+                            "name": "Core HR",
+                            "code": "CORE_HR",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 77,
+                "name": "SMS 2 Way",
+                "code": "SMS_TWO_WAY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Enables applicants and recruiters to communicate via SMS with the ability to reply back via Text without the need to view the comms on Harri",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 78,
+                "name": "Fair Scheduling",
+                "code": "FAIR_SCHEDULING",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Adds Fair Scheduling rules to TeamLive see jurisdictions (see jurisdictions here). Rules are applied via template drawdown menu in FWW settings in the UI. This service flags potential penalties based on scheduled publish date, schedule changes, and schedule / clock-in variances.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 79,
+                "name": "Branded Comms",
+                "code": "MANAGE_EMAIL_CONTENT",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "FORCE",
+                "description": "Gives Clients the ability to add their own logo & their own version of copy text to selected triggered candidate emails. Can add media to message bodies as of newest enhancement",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 80,
+                "name": "Logbook",
+                "code": "LOGBOOK",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows users to create and manage weekly tasks and reminders. It helps users stay organized and ensures that important tasks are completed on time. The Logbook can be used to track and monitor various activities, such as scheduling, time management, and task completion. It is a tool that helps streamline workflow and improve productivity.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 82,
+                "name": "Candidate Privacy",
+                "code": "CANDIDATE_PRIVACY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Hides all candidate profile images in swimlanes, talent pool, and Documents (formerly My Docs). This was moved from an admin settings in Harri to backend activation.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 83,
+                "name": "Post Hire",
+                "code": "DATA_PASS_SYNC",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 85,
+                "name": "Stations Levels",
+                "code": "JOB_TITLE_SKILL_LEVEL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Add stations, or shift details to shifts by configuring station groups up to the financial unit level. Define employee station ability with levels 1-5 per group to control auto-scheduling and schedule warnings across locations.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 86,
+                "name": "Job Approval Flow",
+                "code": "JOB_APPROVAL_FLOW",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It gives admins the ability to control which roles are posted and by requiring their approval. Users can configure approval flows and approve posts from the top level settings / home page",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 87,
+                "name": "Harri Health Check",
+                "code": "TEAM_QUESTIONING",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 88,
+                "name": "WOTC (Work Opportunity Tax Credit)",
+                "code": "WOTC",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 89,
+                "name": "Onboarding Docs Pre-selection",
+                "code": "ONBOARDING_DOCS_PRESELECTION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Preselects for Managers all documents for NewHire. An enhancement to the on boarding service to avoid manually checking each document in the modal. With recent enhancement, admins can also lock the pre-selection, so chosen documents cannot be unchecked when sending ob documents to candidates.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 90,
+                "name": "Custom Reporting Hierarchy",
+                "code": "CUSTOM_REPORTING_HIERARCHY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows Larger customers to set custom report hierarchy for Flash Dash V2. Creates a toggle on this report to switch between HMAP and custom hierarchy view.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 91,
+                "name": "Prehire",
+                "code": "PREHIRE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 92,
+                "name": "GFE/Anticipated Schedule Service",
+                "code": "GFE_INCIDENTS_TRACKING",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "for NYC, Philadelphia, Chicago, Oregon, Seattle, Emeryville, San Francisco, Los Angeles (retail), Berkeley, Evanston, and newly added FWW jurisdictions: enables delivery of a GFE (called Regular Schedule in NYC). Tracks scheduled variances by shift days and times and triggers when a new GFE is required.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 95,
+                "name": "Custom Dashboard",
+                "code": "CUSTOM_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows individual users to create their own custom reporting dashboards. ",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 96,
+                "name": "Unified Career Portal",
+                "code": "APPRENTICE_JOBS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "A unified job portal is a single website where job postings from multiple companies are published in one place.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 97,
+                "name": "Account Suspended",
+                "code": "ACCOUNT_SUSPENDED",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 98,
+                "name": "Drift Training Chatbot",
+                "code": "DRIFT_TRAINING_CHATBOT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 99,
+                "name": "MICE",
+                "code": "MICE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Enables customers to customize their jobs portal, add additional media to their job posts, and set their brand colors in the media center. Brands can show applicants their own media and colors (instead of generic / Harri branding) when they have not applied with Harri to any other brands.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 100,
+                "name": "Carri Chatbot",
+                "code": "CARRI_CHATBOT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "A natural language processor chat bot that can facilitate text-to-apply with various automations to reduce speed to hire",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 194,
+                            "name": "Harri Host",
+                            "code": "CARRI_AI_AGENT",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 101,
+                "name": "Wendys Labor Model",
+                "code": "WENDYS_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 117,
+                            "name": "MCD Labor Model",
+                            "code": "MCD_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 135,
+                            "name": "Gastronomy Labor Model",
+                            "code": "GASTRONOMY_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 146,
+                            "name": "Carrol Labor Model",
+                            "code": "CARROL_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 102,
+                "name": "Voluntary Standby List",
+                "code": "VOLUNTARY_STANDBY_LIST",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 103,
+                "name": "Employee Satisfaction Model",
+                "code": "EMPLOYEE_SATISFACTION_MODEL",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 105,
+                "name": "Wage Matrix",
+                "code": "WAGE_MATRIX",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Businesses require the ability of setting up wage matrices based on location, position and age, where the system would use those set wages as guardrails for bulk updating wages automatically by the system, where auto wage adjustments are based on their effective dates and employee age.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 106,
+                "name": "Profile Matching",
+                "code": "PROFILE_MATCHING",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It activates an AI model to help recruiters quickly assess an applicant's fit to a job posting. Using predictive analytics, it assigns a match level to any applicants with enough profile or applicant info, bringing them to the top of the stack. ",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 107,
+                "name": "NYC Just Cause",
+                "code": "NYC_JUST_CAUSE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Enables trigger of a Probation Period Summary email when new hires are nearing the end of their probation period. NYC Just cause regulates terminating fast food employees after this probationary period.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 108,
+                "name": "Instant S&H Notifications",
+                "code": "INSTANT_SH_NOTIFICATIONS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Admins will receive an instant notification on their Harri Hire app, or a SMS if notification fails to be received) for the following events: a new applicant applies to an open job post or a candidate confirms an interview invire",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 109,
+                "name": "Employee Benefits",
+                "code": "EMPLOYEE_BENEFITS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Businesses will have the ability to add the benefits information that they offer to their employees. Managers will be able to determine the name, description and add an embedded link for each benefit details. The employees will be able to access the offered link to their benefits on TeamLive web and app.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 110,
+                "name": "Blocked Past Employees",
+                "code": "BLOCKED_PAST_EMPLOYEES",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows admins to create a list of employees blocked from rehire across the brand. Any future applicants from this list will be automatically Moved to Skip Column",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 111,
+                "name": "Multi Locations Dashboard",
+                "code": "MULTI_LOCATIONS_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Provides additional functionality to the current HarriLive Dash, where a manager can select to view the aggregated data for multiple locations",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 112,
+                "name": "Harri IQ",
+                "code": "ANALYTICS_BARRI",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Users can create their own custom reports, widgets, and dashboards and run their own formulas with the Data points available. Harri IQ offers a variety of graph types, filters, and scheduled updates to maximize the user experience",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 113,
+                "name": "Enterprise Communication",
+                "code": "ENTERPRISE_COMMUNICATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "It turns on Commshub, our communication tool",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 114,
+                "name": "News Feed",
+                "code": "NEWS_FEED",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "allows team members and management to post messages and share information with each other. It serves as a central hub for communication within an organization, where important updates, announcements, and other relevant content can be shared.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 115,
+                "name": "Employee Notes",
+                "code": "EMPLOYEE_NOTES",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "provides managers with the ability to add new notes and edit/delete the already added ones. Moreover, notes types are introduced in top business selected level so managers can choose the note type and filter notes based on their type",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 116,
+                "name": "Sales Forecast Feed",
+                "code": "SALES_FORECAST_FEED",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": "Alternative to ABS for the customer to provide with their own forecast",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 66,
+                            "name": "Demand Forecasting",
+                            "code": "DEMAND_FORECASTING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 117,
+                "name": "MCD Labor Model",
+                "code": "MCD_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 101,
+                            "name": "Wendys Labor Model",
+                            "code": "WENDYS_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 135,
+                            "name": "Gastronomy Labor Model",
+                            "code": "GASTRONOMY_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 146,
+                            "name": "Carrol Labor Model",
+                            "code": "CARROL_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 118,
+                "name": "SSO",
+                "code": "SSO",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 123,
+                            "name": "Two-step verification",
+                            "code": "MFA",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 119,
+                "name": "Core HR",
+                "code": "CORE_HR",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 120,
+                "name": "Tenants Jobs",
+                "code": "TENANT_JOBS",
+                "platform": "HARRI",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "To help our clients to advertise for Tenants (these are similar to Franchisees) to rent the property from the customer and assume the right to occupy the pub for an agreed period.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 36,
+                            "name": "Job Postings Options",
+                            "code": "PRIVATE_JOB_POST",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 121,
+                "name": "Document Builder",
+                "code": "CUSTOM_FORM_BUILDER",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "allows the users to create their own forms and documents, with fields for manager and or candidate entry, and add them to their desired locations, without having to go back to Harri’s team.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 122,
+                "name": "HR Actions",
+                "code": "HR_ACTIONS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 123,
+                "name": "Two-step verification",
+                "code": "MFA",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 118,
+                            "name": "SSO",
+                            "code": "SSO",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 124,
+                "name": "Earned Wage Access",
+                "code": "EARNED_WAGE_ACCESS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 126,
+                "name": "Reports Management",
+                "code": "CUSTOM_REPORTS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Activates and organizes which standard reports are to be shown.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 127,
+                "name": "Indeed campaign management",
+                "code": "INDEED_CAMPAIGN_MANAGEMENT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "allows for paid sponsorships to be executed programmatically via API",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 5,
+                            "name": "Job Distributor",
+                            "code": "JOB_DISTRIBUTOR",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 128,
+                "name": "Minors Handling",
+                "code": "MINOR_HANDLING",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows the admin to set the minimum minor age per organizational level, so managers won’t be able to add employees or edit minors’ ages who are less than the defined minimum minor age.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 129,
+                "name": "Approval Flow",
+                "code": "APPROVAL_FLOW",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Gives the manager the ability to view the following action details and approve or reject them.: Transfer/Share employees, wage/job title , offer letter, on-boarding documents and/or orecast approval flow ",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 131,
+                "name": "Requests Management",
+                "code": "ABSENCE_MANAGEMENT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 132,
+                "name": "Clock Financial Integration",
+                "code": "CLOCK_FINANCIAL_INTEGRATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 133,
+                "name": "Performance Review Management",
+                "code": "PERFORMANCE_REVIEW",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": [
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 119,
+                                    "name": "Core HR",
+                                    "code": "CORE_HR",
+                                    "platform": "HARRI",
+                                    "apply_to_children_mode": "FORCE"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 10,
+                                    "name": "Team Scheduling",
+                                    "code": "TEAM_SCHEDULING",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "GROUPS"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 134,
+                "name": "Tips Management",
+                "code": "TIPS_MANAGEMENT",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "activates tip pooling and distribution by financial unit. Tips can be pooled and distributed by hours worked daily or by pay period. Variable points / percentages by position is supported. Tips should be added to PDS and distributed automatically.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 135,
+                "name": "Gastronomy Labor Model",
+                "code": "GASTRONOMY_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 85,
+                            "name": "Stations Levels",
+                            "code": "JOB_TITLE_SKILL_LEVEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 101,
+                            "name": "Wendys Labor Model",
+                            "code": "WENDYS_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 117,
+                            "name": "MCD Labor Model",
+                            "code": "MCD_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 146,
+                            "name": "Carrol Labor Model",
+                            "code": "CARROL_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 136,
+                "name": "Edit profile",
+                "code": "SELF_EMAIL_EDIT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Allows admins and employees (based on service configuration) to edit their emails without restrictions",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 138,
+                "name": "Primary Position",
+                "code": "PRIMARY_POSITION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 139,
+                "name": "IPC Integration",
+                "code": "IPC_INTEGRATION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 140,
+                "name": "Accessibility Tool",
+                "code": "ACCESSIBILITY_TOOL",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 141,
+                "name": "Private mode",
+                "code": "ANONYMISING_EMPLOYEES",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 142,
+                "name": "NI Auto Assign",
+                "code": "NI_AUTO_ASSIGN",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Allows the system to automatically assign and update employees' NI categories based on their age when they are hired or as they age. Categories supporting auto-asign/update: X, M, C, A",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 143,
+                "name": "Pension Matrix",
+                "code": "PENSION_MATRIX",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Auto assign the pension % for new employees based on the rules created in the pension matrix section",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 144,
+                "name": "McD Brand Reporting",
+                "code": "MCD_BRAND_REPORTING",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 145,
+                "name": "Harri Engage",
+                "code": "HARRI_ENGAGE",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "It enables clients to create and distribute a variety of communication materials, such as surveys, announcements, recognition messages, and feedback requests, fostering a culture of open communication and collaboration.",
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 154,
+                            "name": "On-boarding Journey",
+                            "code": "ONBOARDING_JOURNEY",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 146,
+                "name": "Carrol Labor Model",
+                "code": "CARROL_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "STANDARD",
+                "apply_to_children_mode": "NO_APPLY",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 101,
+                            "name": "Wendys Labor Model",
+                            "code": "WENDYS_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 117,
+                            "name": "MCD Labor Model",
+                            "code": "MCD_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 135,
+                            "name": "Gastronomy Labor Model",
+                            "code": "GASTRONOMY_LABOR_MODEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 150,
+                "name": "Open API integration",
+                "code": "OPEN_API_INTEGRATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 151,
+                "name": "Harri Academy",
+                "code": "HARRI_ACADEMY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Provides training materials, including guided courses and how-to videos where admins can assign",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 152,
+                "name": "Welcome Video",
+                "code": "WELCOME_VIDEO",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 3,
+                            "name": "On Boarding",
+                            "code": "ON_BOARDING",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 153,
+                "name": "Meal Plan Participant",
+                "code": "MEAL_PLAN_PARTICIPANT",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 155,
+                "name": "Applicants Auto Import",
+                "code": "APPLICANT_AUTO_IMPORT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 36,
+                            "name": "Job Postings Options",
+                            "code": "PRIVATE_JOB_POST",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 41,
+                            "name": "LOGJAM",
+                            "code": "LOGJAM",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [
+                    {
+                        "dependency_service": {
+                            "id": 16,
+                            "name": "Custom Swimlanes",
+                            "code": "CUSTOM_SWIMLANE",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 156,
+                "name": "ADAM",
+                "code": "ADAM",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 157,
+                "name": "Additional Payments",
+                "code": "RECURRING_PAY_ADJUSTMENTS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "allows employers to set and define recurring additional/deduction payments on the employee level to be reflected on PDS periodically",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 158,
+                "name": "Work Visas",
+                "code": "EMPLOYEE_WORK_RESTRICTION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "It help businesses manage compliance by incorporating visa-related constraints directly into employee schedules.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 159,
+                "name": "Dynamic Landing Page",
+                "code": "HALO_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Provide a landing page dashboard that provides a regional view of sales and labor data. Through this dashboard, the user should be able to drill down to see the insights/KPIs at different levels.",
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 160,
+                "name": "CoreHR Payroll",
+                "code": "CORE_HR_UPDATES_INTEGRATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 138,
+                            "name": "Primary Position",
+                            "code": "PRIMARY_POSITION",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 6,
+                            "name": "Payroll",
+                            "code": "PAYROLL",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 161,
+                "name": "COMPaaS Dashboard",
+                "code": "COMPAAS_DASHBOARD",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 162,
+                "name": "Livewire V2 Dashboard",
+                "code": "LIVE_WIRE_V2_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 163,
+                "name": "Risk Analysis",
+                "code": "RISK_DETECTION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 164,
+                "name": "Employee Compliance Attestation",
+                "code": "EMPLOYEE_COMPLIANCE_ATTESTATION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 165,
+                "name": "Upskill",
+                "code": "UPSKILL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 70,
+                            "name": "LMS",
+                            "code": "LMS",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 190,
+                            "name": "Learning Management",
+                            "code": "HARRI_LEARNING_MANAGEMENT",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 166,
+                "name": "Business positions hierarchy",
+                "code": "BUSINESS_POSITIONS_HIERARCHY",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 167,
+                "name": "Equal Employment Opportunity",
+                "code": "EQUAL_EMPLOYMENT_OPPORTUNITY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 168,
+                "name": "JIB labor model",
+                "code": "JACK_IN_THE_BOX_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 85,
+                            "name": "Stations Levels",
+                            "code": "JOB_TITLE_SKILL_LEVEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 169,
+                "name": "Employment Types",
+                "code": "EMPLOYMENT_TYPES",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 170,
+                "name": "Schedule Reports",
+                "code": "SCHEDULE_REPORTS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 171,
+                "name": "Automated onboarding",
+                "code": "AUTOMATED_ONBOARDING",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 24,
+                            "name": "ATR",
+                            "code": "ATR",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 74,
+                            "name": "Background Check",
+                            "code": "BACKGROUND_CHECK",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 173,
+                "name": "48hr Work Limit",
+                "code": "WORK_LIMIT",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 174,
+                "name": "Working Patterns",
+                "code": "WORKING_PATTERNS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 175,
+                "name": "Clock-out attestation questions",
+                "code": "CLOCK_OUT_ATTESTATION_QUESTIONS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 176,
+                "name": "Candidate insights and comparisons",
+                "code": "AI_CANDIDATE_SUMMARIES",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 177,
+                "name": "Harri Agentic AI",
+                "code": "HARRI_AGENTIC_AI",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 198,
+                            "name": "PLG - Harri Agentic AI",
+                            "code": "PLG_HARRI_AGENTIC_AI",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 179,
+                "name": "Rewards & Recognition",
+                "code": "REWARDS_AND_RECOGNITION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 113,
+                            "name": "Enterprise Communication",
+                            "code": "ENTERPRISE_COMMUNICATION",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 180,
+                "name": "Generate trending KPIs",
+                "code": "GENERATE_TRENDING_KPIS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": [
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 42,
+                                    "name": "Activity Based Scheduling",
+                                    "code": "ACTIVITY_BASED_SCHEDULING",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "NO_APPLY"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 101,
+                                    "name": "Wendys Labor Model",
+                                    "code": "WENDYS_LABOR_MODEL",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "TREE_SELECTION"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 117,
+                                    "name": "MCD Labor Model",
+                                    "code": "MCD_LABOR_MODEL",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "NO_APPLY"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 181,
+                "name": "Labor Operations Dashboard",
+                "code": "LABOR_OPERATIONS_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 20,
+                            "name": "Harri Clock",
+                            "code": "HARRI_CLOCK",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 182,
+                "name": "Harri AI Support",
+                "code": "HARRI_AI_SUPPORT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 183,
+                "name": "AI Screening Calls",
+                "code": "AI_SCREENING_CALLS",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "The service allows employers to screen candidates through an AI-powered phone call. It becomes available once a CS contract is in place.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 184,
+                "name": "Talent Acquisition Dashboard",
+                "code": "TALENT_ACQUISITION_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 185,
+                "name": "Taco Bell labor model",
+                "code": "TACO_BELL_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 85,
+                            "name": "Stations Levels",
+                            "code": "JOB_TITLE_SKILL_LEVEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 186,
+                "name": "Portillo’s labor model",
+                "code": "PORTILLOS_LABOR_MODEL",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 85,
+                            "name": "Stations Levels",
+                            "code": "JOB_TITLE_SKILL_LEVEL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 187,
+                "name": "Message Centre Translation",
+                "code": "MESSAGE_CENTRE_TRANSLATION",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": "Enables automatic message translation in the Message Center",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 188,
+                "name": "Wisely Pay",
+                "code": "WISELY_PAY",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 189,
+                "name": "IIMATS/Disciplinary Action",
+                "code": "IIMATS_DISCIPLINARY_ACTION",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 69,
+                            "name": "Team",
+                            "code": "TEAM",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 190,
+                "name": "Learning Management",
+                "code": "HARRI_LEARNING_MANAGEMENT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 70,
+                            "name": "LMS",
+                            "code": "LMS",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    },
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 165,
+                            "name": "Upskill",
+                            "code": "UPSKILL",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 191,
+                "name": "MCP Service",
+                "code": "MCP_SERVICE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 192,
+                "name": "Denny’s Ideal Cost Calculations",
+                "code": "DENNYS_IDEAL_COST_CALCULATIONS",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 42,
+                            "name": "Activity Based Scheduling",
+                            "code": "ACTIVITY_BASED_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "NO_APPLY"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 194,
+                "name": "Harri Host",
+                "code": "CARRI_AI_AGENT",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 100,
+                            "name": "Carri Chatbot",
+                            "code": "CARRI_CHATBOT",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 195,
+                "name": "Succession Planning",
+                "code": "SUCCESSION_PLANNING",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    },
+                    {
+                        "prerequisite_service": {
+                            "id": 166,
+                            "name": "Business positions hierarchy",
+                            "code": "BUSINESS_POSITIONS_HIERARCHY",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "FORCE"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 196,
+                "name": "Harri AI Summary",
+                "code": "HARRI_AI_SUMMARY",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "TREE_SELECTION",
+                "description": "Provides AI-generated summaries on Sales and Labor, surfacing actionable insights directly within your operational dashboards.",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": [
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 159,
+                                    "name": "Dynamic Landing Page",
+                                    "code": "HALO_DASHBOARD",
+                                    "platform": "HARRI",
+                                    "apply_to_children_mode": "FORCE"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 126,
+                                    "name": "Reports Management",
+                                    "code": "CUSTOM_REPORTS",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "FORCE"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 67,
+                                    "name": "POS",
+                                    "code": "POS",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "GROUPS"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 111,
+                                    "name": "Multi Locations Dashboard",
+                                    "code": "MULTI_LOCATIONS_DASHBOARD",
+                                    "platform": "HARRI",
+                                    "apply_to_children_mode": "FORCE"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "prerequisite_group_services": [
+                            {
+                                "service": {
+                                    "id": 163,
+                                    "name": "Risk Analysis",
+                                    "code": "RISK_DETECTION",
+                                    "platform": "TEAM",
+                                    "apply_to_children_mode": "FORCE"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 197,
+                "name": "Operating Hours Import",
+                "code": "OPERATING_HOURS_IMPORT",
+                "platform": "TEAM",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "GROUPS",
+                "description": "Enables importing brand operating hours from an external integration channel",
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 198,
+                "name": "PLG - Harri Agentic AI",
+                "code": "PLG_HARRI_AGENTIC_AI",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [
+                    {
+                        "mutual_exclusive_service": {
+                            "id": 177,
+                            "name": "Harri Agentic AI",
+                            "code": "HARRI_AGENTIC_AI",
+                            "platform": "HARRI",
+                            "apply_to_children_mode": "TREE_SELECTION"
+                        }
+                    }
+                ],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 199,
+                "name": "Candidate Voice",
+                "code": "CANDIDATE_VOICE",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            },
+            {
+                "id": 200,
+                "name": "Command Center Dashboard",
+                "code": "COMMAND_CENTER_DASHBOARD",
+                "platform": "HARRI",
+                "mode": "HIGHEST_LEVEL_ONLY",
+                "apply_to_children_mode": "FORCE",
+                "description": null,
+                "prerequisites": [
+                    {
+                        "prerequisite_service": {
+                            "id": 10,
+                            "name": "Team Scheduling",
+                            "code": "TEAM_SCHEDULING",
+                            "platform": "TEAM",
+                            "apply_to_children_mode": "GROUPS"
+                        }
+                    }
+                ],
+                "mutual_exclusives": [],
+                "implicit_dependencies": [],
+                "prerequisite_groups": []
+            }
+        ]
+    }
+}

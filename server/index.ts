@@ -1,10 +1,25 @@
-import "dotenv/config";
 import { createApp } from "./app.ts";
 import { CatalogClient } from "./catalog.ts";
-import { readConfig } from "./config.ts";
-const config = readConfig(process.env);
-createApp(new CatalogClient(config)).listen(config.port, "127.0.0.1", () => {
-  console.log(
-    `Harri Brand Service Manager: http://127.0.0.1:${config.port} (${config.mode}, read-only)`,
-  );
-});
+import { loadRuntimeConfig, safeAuthSummary } from "./runtime-config.ts";
+const { config, source } = loadRuntimeConfig();
+const server = createApp(new CatalogClient(config));
+server
+  .listen(config.port, "127.0.0.1", () => {
+    console.log(
+      `Harri Brand Service Manager: http://127.0.0.1:${config.port} (${config.mode}, read-only)`,
+    );
+    console.log(`Configuration source: ${source}`);
+    if (config.mode === "live")
+      console.log(
+        "Authentication configuration (values hidden):",
+        safeAuthSummary(config),
+      );
+  })
+  .on("error", (error: NodeJS.ErrnoException) => {
+    console.error(
+      error.code === "EADDRINUSE"
+        ? `Port ${config.port} is already in use. Stop the old backend before restarting.`
+        : "The local server could not start.",
+    );
+    process.exitCode = 1;
+  });

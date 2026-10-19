@@ -18,7 +18,7 @@ export function readConfig(env: NodeJS.ProcessEnv): Config {
   const name = env.HARRI_AUTH_HEADER_NAME;
   const value = env.HARRI_AUTH_HEADER_VALUE;
   if (mode === "live") {
-    if (!name || !value)
+    if (!name || !value?.trim())
       throw new Error(
         "Live mode requires HARRI_AUTH_HEADER_NAME and HARRI_AUTH_HEADER_VALUE on the server.",
       );
@@ -34,6 +34,10 @@ export function readConfig(env: NodeJS.ProcessEnv): Config {
       (env.HARRI_COOKIE && /[\r\n]/.test(env.HARRI_COOKIE))
     )
       throw new Error("Authentication headers must not contain line breaks.");
+    if (name.toLowerCase() === "cookie" && env.HARRI_COOKIE)
+      throw new Error(
+        "Cookie is configured twice. For cookie-only auth, leave HARRI_COOKIE empty.",
+      );
     headers[name] = value;
     if (env.HARRI_COOKIE) headers.Cookie = env.HARRI_COOKIE;
   }

@@ -60,7 +60,7 @@ PORT=3001
 
 Only clicking **Load Services** initiates the two Harri GET requests in Live Mode. The status endpoint does not contact Harri. Requests use Playwright APIRequestContext, a 15-second timeout, normal TLS certificate checks, zero redirects, no automatic retries and disposed request contexts. The Brand ID is validated before interpolation; users cannot submit arbitrary upstream URLs or payloads.
 
-Errors distinguish invalid IDs (400), rejected authentication (401), access denied (403), Brand not found/not visible (404), invalid responses (502), and connectivity/timeouts (502). An authentication redirect is surfaced as an authentication error instead of forwarding credentials to another host. The UI never substitutes fixture data after a live failure. Independent Brand/catalog results remain separately labeled when one request fails.
+Errors distinguish invalid IDs (400), rejected authentication (401), access denied (403), Brand not found/not visible (404), invalid responses (502), and connectivity/timeouts (502). Redirect responses are reported separately as UPSTREAM_REDIRECT with their exact HTTP status; redirects are never followed. HTTP 401 is reported separately as rejected authentication. The UI never substitutes fixture data after a live failure. Independent Brand/catalog results remain separately labeled when one request fails.
 
 ## Read-only boundaries
 
@@ -95,3 +95,11 @@ Unit and backend tests cover full fixture preservation, malformed responses, nul
 ## Next integration: assigned services
 
 In Chrome DevTools → Network → Fetch/XHR, clear the request list and open an existing Brand's Services view in Harri BAM. Find the **GET** request whose response enumerates that specific Brand's assigned services. Provide its URL, method and sanitized response, with Authorization/Cookie/session values removed. Until that contract is confirmed, service activation status remains **unavailable**. Do not infer assignments from catalog prerequisites, Brand status or service mode.
+
+## Troubleshooting live authentication
+
+The server reads `.env` next to the project `package.json`, independently of the current shell directory. Settings present in that file take precedence over inherited HARRI settings and PORT. Missing keys can still come from the process environment. Restart the backend after editing `.env`; changing that file alone does not restart the running process.
+
+Startup prints the configuration source, authentication header **name**, whether a cookie is configured, and (for Bearer Authorization) a format-valid boolean. It never prints credential values, token fragments or fingerprints. A false format check is a diagnostic hint, not a claim that the token itself is valid or invalid. Cookie-only auth must not be configured twice: leave HARRI_COOKIE empty when HARRI_AUTH_HEADER_NAME=Cookie.
+
+If authentication fails, the UI now distinguishes `HTTP 401`, `HTTP 403`, and redirect statuses such as `HTTP 302`. Do not infer that a redirect is necessarily a login redirect; its destination is not returned to the UI. The raw response body and Location/Set-Cookie headers stay private. A working browser session alone does not prove the server is sending an equivalent authenticated request. Share only the new HTTP status, the safe startup summary, and the required header names when diagnosing. Never share the values. No extra authentication scheme or undocumented headers are guessed.

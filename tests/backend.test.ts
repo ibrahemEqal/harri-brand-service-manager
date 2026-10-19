@@ -80,7 +80,7 @@ test("live adapter performs exactly one GET to confirmed endpoint and disposes c
 for (const [status, code] of [
   [401, "AUTHENTICATION_ERROR"],
   [403, "ACCESS_DENIED"],
-  [302, "AUTHENTICATION_ERROR"],
+  [302, "UPSTREAM_REDIRECT"],
   [429, "UPSTREAM_ERROR"],
   [500, "UPSTREAM_ERROR"],
 ] as const) {

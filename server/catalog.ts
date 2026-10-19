@@ -67,17 +67,23 @@ export class CatalogClient {
       });
       const response = await context.get(url, { maxRedirects: 0 });
       const status = response.status();
-      if (status === 401 || (status >= 300 && status < 400))
+      if (status >= 300 && status < 400)
+        throw new ApiError(
+          502,
+          "UPSTREAM_REDIRECT",
+          `HTTP ${status}: Harri returned a redirect. It was not followed. Compare the working BAM request's authentication and required header names; no redirect URL or credentials are exposed.`,
+        );
+      if (status === 401)
         throw new ApiError(
           401,
           "AUTHENTICATION_ERROR",
-          "Harri authentication was rejected or redirected. Update the approved server-side session credentials.",
+          "HTTP 401: Harri rejected the backend credentials. Check that the approved session is current and that the backend sends the same required authentication headers as the working BAM request.",
         );
       if (status === 403)
         throw new ApiError(
           403,
           "ACCESS_DENIED",
-          "Harri denied access. Your session may lack permission or may need renewal.",
+          "HTTP 403: Harri denied access. Your session may lack permission or may need renewal.",
         );
       if (kind === "Brand" && status === 404)
         throw new ApiError(

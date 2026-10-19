@@ -2,7 +2,7 @@
 
 A local, **strictly read-only** Harri BAM QA dashboard. React, TypeScript, Vite, Tailwind CSS, Node.js/Express and Playwright APIRequestContext.
 
-Enter a Brand ID to load that Brand's details and the complete global service catalog through the backend. Search names/codes/descriptions, filter platform and mode, sort alphabetically and inspect every nested dependency/exclusion/group in a keyboard-accessible details drawer.
+Enter a Brand ID to load that Brand's details and the complete global service catalog through the backend. Services stay collapsed in a searchable dropdown. Open it to search names/codes/descriptions, filter platform and mode, sort alphabetically and inspect nested dependency/exclusion/group details. Keyboard users can use the search field with Arrow keys, Enter and Escape. Main text and inputs use a larger readable type scale.
 
 ## Run locally
 
@@ -85,7 +85,7 @@ Unit and backend tests cover full fixture preservation, malformed responses, nul
 
 ## Project structure
 
-- `src/components/`: reusable service cards, Brand overview and accessible native-dialog details drawer.
+- `src/components/`: reusable searchable service picker, Brand overview and accessible native-dialog details drawer.
 - `src/api.ts`: frontend GET client and safe error handling.
 - `shared/`: TypeScript contracts, runtime response validation and search/filter functions.
 - `server/`: configuration, read-only Playwright adapter and local Express routes.

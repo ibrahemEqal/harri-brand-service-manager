@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  filterServices,
   hasRelationships,
   type CatalogResponse,
   type OperatingMode,
@@ -9,7 +8,7 @@ import {
 } from "../shared/catalog.ts";
 import type { BrandResponse } from "../shared/brand.ts";
 import { BrandOverview } from "./components/BrandOverview.tsx";
-import { ServiceCard } from "./components/ServiceCard.tsx";
+import { ServicePicker } from "./components/ServicePicker.tsx";
 import { ServiceDetails } from "./components/ServiceDetails.tsx";
 import { getJson, RequestError } from "./api.ts";
 import "./style.css";
@@ -22,10 +21,6 @@ function App() {
   const [catalog, setCatalog] = useState<CatalogResponse | null>(null);
   const [error, setError] = useState<RequestError | null>(null);
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [serviceMode, setServiceMode] = useState("");
-  const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [selected, setSelected] = useState<Service | null>(null);
   const controller = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -39,15 +34,6 @@ function App() {
     };
   }, []);
   const services = catalog?.services ?? [];
-  const filtered = useMemo(
-    () =>
-      filterServices(services, { query, platform, mode: serviceMode, sort }),
-    [catalog, query, platform, serviceMode, sort],
-  );
-  const modes = [...new Set(services.map((service) => service.mode))].sort();
-  const platforms = [
-    ...new Set(services.map((service) => service.platform)),
-  ].sort();
   const validBrandId =
     /^[1-9]\d{0,15}$/.test(brandId) && Number.isSafeInteger(Number(brandId));
   async function load() {
@@ -87,12 +73,6 @@ function App() {
           : new RequestError("REQUEST_FAILED", "Could not load services."),
       );
     setLoading(false);
-  }
-  function resetFilters() {
-    setQuery("");
-    setPlatform("");
-    setServiceMode("");
-    setSort("asc");
   }
   return (
     <div className="app-shell">
@@ -299,57 +279,6 @@ function App() {
                 </span>
               )}
             </div>
-            <div className="filters panel">
-              <div className="search-wrap">
-                <span aria-hidden="true">⌕</span>
-                <input
-                  aria-label="Search services"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search name, code or description…"
-                  disabled={!catalog}
-                />
-              </div>
-              <label>
-                <span className="sr-only">Platform</span>
-                <select
-                  aria-label="Platform"
-                  value={platform}
-                  onChange={(event) => setPlatform(event.target.value)}
-                  disabled={!catalog}
-                >
-                  <option value="">All platforms</option>
-                  {platforms.map((value) => (
-                    <option key={value}>{value}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <span className="sr-only">Service mode</span>
-                <select
-                  aria-label="Service mode"
-                  value={serviceMode}
-                  onChange={(event) => setServiceMode(event.target.value)}
-                  disabled={!catalog}
-                >
-                  <option value="">All service modes</option>
-                  {modes.map((value) => (
-                    <option key={value}>{value}</option>
-                  ))}
-                </select>
-              </label>
-              <select
-                aria-label="Sort services"
-                value={sort}
-                onChange={(event) =>
-                  setSort(event.target.value as "asc" | "desc")
-                }
-                disabled={!catalog}
-              >
-                <option value="asc">Name: A–Z</option>
-                <option value="desc">Name: Z–A</option>
-              </select>
-            </div>
             {error ? (
               <div className="empty-state error-state panel" role="alert">
                 <span className="state-icon">!</span>
@@ -371,14 +300,9 @@ function App() {
                   Loading catalog from{" "}
                   {mode === "live" ? "Harri Prep" : "the local fixture"}…
                 </p>
-                <div className="service-grid">
-                  {Array.from({ length: 6 }, (_, i) => (
-                    <div className="skeleton panel" key={i}>
-                      <div />
-                      <div />
-                      <div />
-                    </div>
-                  ))}
+                <div className="skeleton panel">
+                  <div />
+                  <div />
                 </div>
               </div>
             ) : !catalog ? (
@@ -388,55 +312,19 @@ function App() {
                 <p>
                   Enter a Brand ID and choose Load Services.
                   <br />
-                  The complete global catalog will appear here.
+                  The service dropdown will be available here.
                 </p>
                 <span className="empty-note">
                   Brand details + global catalog · Read-only GET requests
                 </span>
               </div>
+            ) : services.length ? (
+              <ServicePicker services={services} onSelect={setSelected} />
             ) : (
-              <>
-                <div className="result-bar">
-                  <p className="result-count" role="status">
-                    Showing <strong>{filtered.length}</strong> of{" "}
-                    {services.length} services
-                  </p>
-                  {(query || platform || serviceMode || sort !== "asc") && (
-                    <button className="text-button" onClick={resetFilters}>
-                      Reset filters
-                    </button>
-                  )}
-                  <span>Activation status unavailable</span>
-                </div>
-                {filtered.length ? (
-                  <div className="service-grid">
-                    {filtered.map((service) => (
-                      <ServiceCard
-                        key={service.id}
-                        service={service}
-                        onOpen={() => setSelected(service)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="empty-state panel">
-                    <span className="state-icon">⌕</span>
-                    <h3>
-                      {services.length
-                        ? "No matching services"
-                        : "The catalog is empty"}
-                    </h3>
-                    <p>
-                      {services.length
-                        ? "Try a different search or clear your filters."
-                        : "The API returned an empty services array."}
-                    </p>
-                    {services.length > 0 && (
-                      <button onClick={resetFilters}>Reset filters</button>
-                    )}
-                  </div>
-                )}
-              </>
+              <div className="empty-state panel">
+                <h3>The catalog is empty</h3>
+                <p>The API returned an empty services array.</p>
+              </div>
             )}
           </section>
           <footer>

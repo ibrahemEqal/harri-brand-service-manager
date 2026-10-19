@@ -16,3 +16,7 @@ The service catalog is global, not a Brand's assignments. Assigned-service activ
 ## Authentication diagnostics update
 
 Validated project `.env` precedence over inherited tool settings, safe metadata-only startup summaries, duplicate Cookie-source rejection and exact 401-versus-redirect reporting. No live Harri requests were executed. This change improves diagnosis; successful authentication is still unverified.
+
+## Readability and compact service selection
+
+Increased the UI type scale (main text/inputs 16px, small metadata 14px+) and strengthened muted text contrast. Replaced the full service grid with a collapsed searchable dropdown; platform/mode filters and sorting appear only inside the opened picker. Selection opens the existing details drawer; no activation operation was added. Browser specs were updated for dropdown keyboard selection, focus restoration and readable input text. Browser execution remains unavailable in this environment because Chromium is not installed.

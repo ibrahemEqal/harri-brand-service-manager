@@ -11,7 +11,7 @@
   color: #243b46;
   background: #f5f7f8;
   font-synthesis: none;
-  font-size: 14px;
+  font-size: 16px;
 }
 * {
   box-sizing: border-box;
@@ -58,7 +58,7 @@ button {
   padding: 10px 15px;
   border-radius: 7px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 16px;
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -90,17 +90,17 @@ p {
   margin: 0;
 }
 p {
-  color: #7b8b93;
+  color: #526c78;
   line-height: 1.7;
-  font-size: 12px;
+  font-size: 16px;
 }
 code {
   font-family: "SFMono-Regular", Consolas, monospace;
   overflow-wrap: anywhere;
 }
 small {
-  font-size: 10px;
-  color: #8d9ba2;
+  font-size: 14px;
+  color: #607680;
 }
 .app-shell {
   display: flex;
@@ -127,14 +127,14 @@ small {
 }
 .wordmark > span {
   display: block;
-  font-size: 8px;
+  font-size: 13px;
   letter-spacing: 3px;
   font-weight: 500;
   margin-top: 12px;
   color: #8caeaf;
 }
 .workspace-label {
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 1.8px;
   margin: 48px 14px 15px;
   color: #7b9b9f;
@@ -146,7 +146,7 @@ small {
   padding: 13px;
   background: #24464e;
   color: #f0fbfa;
-  font-size: 12px;
+  font-size: 16px;
   border-radius: 7px;
   border: 1px solid #365960;
 }
@@ -162,7 +162,7 @@ small {
   margin-left: auto;
 }
 .sidebar-context {
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 1.1px;
   margin: 31px 14px;
 }
@@ -175,7 +175,7 @@ small {
   margin-right: 7px;
 }
 .sidebar-context p {
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0;
   margin: 7px 0 0 14px;
   color: #75969c;
@@ -187,7 +187,7 @@ small {
   border-top: 1px solid #2a4851;
   padding: 24px 2px 0;
   margin-top: auto;
-  font-size: 11px;
+  font-size: 15px;
   color: #d9e7e8;
 }
 .avatar {
@@ -197,12 +197,12 @@ small {
   height: 33px;
   background: #2e515a;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
 }
 .sidebar-bottom small {
   display: block;
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 5px;
   color: #7c9fa5;
 }
@@ -218,10 +218,10 @@ small {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: 15px;
 }
 .muted {
-  color: #94a2a9;
+  color: #5d727b;
 }
 .slash {
   color: #bcc5ca;
@@ -233,7 +233,7 @@ small {
   align-items: center;
 }
 .readonly {
-  font-size: 10px;
+  font-size: 14px;
   color: #7e9096;
 }
 .mode-badge {
@@ -244,7 +244,7 @@ small {
   background: #f0f8f4;
   color: #528275;
   padding: 6px 8px;
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 0.8px;
   border-radius: 5px;
   font-weight: 650;
@@ -273,9 +273,9 @@ main {
   gap: 20px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 1.5px;
-  color: #8d9ba3;
+  color: #5b727d;
   font-weight: 650;
 }
 h1 {
@@ -288,7 +288,7 @@ h1 {
 h1 > span {
   vertical-align: middle;
   margin-left: 10px;
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0;
   border: 1px solid #dfe6e9;
   padding: 3px 6px;
@@ -297,11 +297,11 @@ h1 > span {
   color: #8a9aa1;
 }
 .page-heading p {
-  font-size: 12px;
+  font-size: 16px;
 }
 .environment-tag {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 15px;
   border: 1px solid #dfe6e7;
   padding: 8px 11px;
   border-radius: 6px;
@@ -323,13 +323,13 @@ h1 > span {
   color: #4c9783;
 }
 .scope-banner strong {
-  font-size: 11px;
+  font-size: 15px;
   color: #437e6f;
   font-weight: 650;
 }
 .scope-banner p {
-  font-size: 11px;
-  color: #75958b;
+  font-size: 15px;
+  color: #477567;
   margin-top: 3px;
 }
 .panel {
@@ -346,20 +346,20 @@ h1 > span {
   gap: 30px;
 }
 .section-kicker {
-  font-size: 8px;
+  font-size: 13px;
   letter-spacing: 1.4px;
-  color: #91a0a7;
+  color: #5b727b;
   font-weight: 650;
   margin-bottom: 8px;
 }
 h2 {
-  font-size: 16px;
+  font-size: 20px;
   letter-spacing: -0.2px;
   font-weight: 650;
 }
 .brand-intro p {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: 15px;
 }
 .brand-panel form {
   width: 51%;
@@ -367,7 +367,7 @@ h2 {
 }
 .brand-panel label {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 650;
   margin-bottom: 7px;
 }
@@ -377,7 +377,7 @@ h2 {
 }
 .brand-input-row input {
   flex: 1;
-  font-size: 12px;
+  font-size: 16px;
   width: 0;
 }
 .primary {
@@ -397,7 +397,7 @@ h2 {
 .brand-panel small {
   display: block;
   margin-top: 7px;
-  font-size: 9px;
+  font-size: 14px;
 }
 .integration-panel {
   border: 1px dashed #decdab;
@@ -412,25 +412,25 @@ h2 {
   align-items: center;
 }
 .integration-label {
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 650;
   letter-spacing: 1px;
   color: #a18f71;
 }
 .pending-badge {
   color: #9d782c;
-  font-size: 9px;
+  font-size: 14px;
   background: #f9edcf;
   padding: 3px 7px;
   border-radius: 4px;
 }
 .integration-panel p {
-  font-size: 10px;
+  font-size: 14px;
   color: #9a8d74;
   margin-top: 6px;
 }
 .integration-panel details {
-  font-size: 10px;
+  font-size: 14px;
   color: #9b865d;
   margin-top: 9px;
 }
@@ -457,8 +457,8 @@ h2 {
   gap: 10px;
 }
 .stat > div > span {
-  font-size: 10px;
-  color: #819199;
+  font-size: 14px;
+  color: #607680;
 }
 .stat strong {
   font-size: 29px;
@@ -469,7 +469,7 @@ h2 {
   line-height: 1;
 }
 .stat small {
-  font-size: 9px;
+  font-size: 14px;
 }
 .stat-icon {
   background: #f0f6f5;
@@ -479,7 +479,7 @@ h2 {
   place-items: center;
   width: 29px;
   height: 29px;
-  font-size: 13px;
+  font-size: 16px;
 }
 .catalog-title {
   display: flex;
@@ -493,14 +493,14 @@ h2 {
   background: #e7eeef;
   color: #7c9096;
   vertical-align: middle;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   margin-left: 5px;
   border-radius: 5px;
 }
 .updated {
-  font-size: 9px;
-  color: #99a6ac;
+  font-size: 14px;
+  color: #607680;
 }
 .filters {
   display: flex;
@@ -526,10 +526,10 @@ h2 {
   border-color: transparent;
   background: #f6f8f9;
   padding-left: 36px;
-  font-size: 11px;
+  font-size: 15px;
 }
 .filters select {
-  font-size: 10px;
+  font-size: 14px;
   padding: 10px;
   max-width: 210px;
   border-color: #e5ebed;
@@ -542,8 +542,8 @@ h2 {
   margin-bottom: 10px;
 }
 .result-count {
-  font-size: 10px;
-  color: #98a5ac;
+  font-size: 14px;
+  color: #607680;
 }
 .result-count strong {
   color: #566f77;
@@ -551,14 +551,14 @@ h2 {
 }
 .result-bar > span {
   margin-left: auto;
-  font-size: 9px;
-  color: #9caaa9;
+  font-size: 14px;
+  color: #607680;
 }
 .text-button {
   padding: 2px 0;
   border: 0;
   border-radius: 0;
-  font-size: 9px;
+  font-size: 14px;
   background: transparent;
   color: #367d71;
 }
@@ -599,12 +599,12 @@ h2 {
   border-radius: 8px;
   display: grid;
   place-items: center;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
 }
 .platform {
   display: inline-block;
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 650;
   letter-spacing: 0.5px;
   padding: 4px 7px;
@@ -621,20 +621,20 @@ h2 {
 }
 .service-card h3 {
   font-weight: 650;
-  font-size: 13px;
+  font-size: 16px;
   color: #35515b;
   line-height: 1.4;
   margin-bottom: 7px;
 }
 .service-card > code {
   font-weight: 400;
-  font-size: 8px;
+  font-size: 13px;
   letter-spacing: 0.2px;
   color: #9aa9b0;
   line-height: 1.6;
 }
 .card-description {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.8;
   color: #8e9da4;
   font-weight: 400;
@@ -646,7 +646,7 @@ h2 {
   min-height: 54px;
 }
 .card-mode {
-  font-size: 8px;
+  font-size: 13px;
   color: #91a29f;
   letter-spacing: 0.6px;
   margin-top: auto;
@@ -661,7 +661,7 @@ h2 {
   border-top: 1px solid #edf0f2;
   padding: 13px 0;
   width: 100%;
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 400;
   color: #9caaaf;
 }
@@ -688,19 +688,19 @@ h2 {
   font-size: 25px;
 }
 .empty-state h3 {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
 }
 .empty-state p {
-  font-size: 11px;
+  font-size: 15px;
   max-width: 550px;
   margin: auto;
 }
 .empty-note {
   display: inline-block;
   color: #a3afb4;
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 25px;
 }
 .empty-state button {
@@ -746,11 +746,11 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  font-size: 9px;
-  color: #a1aeb4;
+  font-size: 14px;
+  color: #607680;
 }
 footer b {
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 500;
   margin-left: 5px;
 }
@@ -798,13 +798,13 @@ footer b {
   line-height: 1.35;
 }
 .detail-code {
-  color: #91a3aa;
-  font-size: 11px;
+  color: #526c78;
+  font-size: 15px;
 }
 .detail-description {
-  font-size: 12px;
+  font-size: 16px;
   margin: 21px 0;
-  color: #7c9099;
+  color: #526c78;
 }
 .metadata {
   display: grid;
@@ -816,17 +816,17 @@ footer b {
   border-radius: 7px;
 }
 .metadata dt {
-  font-size: 9px;
-  color: #99a7ad;
+  font-size: 14px;
+  color: #5b727d;
   margin-bottom: 7px;
 }
 .metadata dd {
-  font-size: 10px;
+  font-size: 14px;
   margin: 0;
   overflow-wrap: anywhere;
 }
 .status-notice {
-  font-size: 10px;
+  font-size: 14px;
   color: #a38b5f;
   border: 1px solid #eee2c8;
   background: #fffcf5;
@@ -841,7 +841,7 @@ footer b {
   padding-top: 22px;
 }
 .relationship h3 {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 650;
   display: flex;
   justify-content: space-between;
@@ -851,13 +851,13 @@ footer b {
   background: #eef3f4;
   padding: 3px 6px;
   border-radius: 4px;
-  font-size: 9px;
+  font-size: 14px;
   color: #8b9da3;
 }
 .none,
 .section-hint {
-  font-size: 10px;
-  color: #9aabb1;
+  font-size: 14px;
+  color: #607680;
   margin: 12px 0;
 }
 .references {
@@ -879,18 +879,18 @@ footer b {
   gap: 8px;
 }
 .references strong {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 600;
 }
 .references code {
   display: block;
-  font-size: 9px;
-  color: #91a2aa;
+  font-size: 14px;
+  color: #526c78;
   margin-top: 8px;
 }
 .references small {
   display: block;
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 7px;
   overflow-wrap: anywhere;
 }
@@ -901,7 +901,7 @@ footer b {
   margin-top: 14px;
 }
 .prerequisite-group h4 {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   color: #7f949b;
 }
@@ -930,7 +930,7 @@ footer b {
     padding: 23px 23px 0;
   }
   .card-description {
-    font-size: 11px;
+    font-size: 15px;
   }
   .brand-panel {
     padding: 26px;
@@ -999,7 +999,7 @@ footer b {
   .topbar {
     min-height: 61px;
     padding: 0 18px;
-    font-size: 9px;
+    font-size: 14px;
   }
   .topbar .muted,
   .topbar .slash,
@@ -1030,7 +1030,7 @@ footer b {
     gap: 10px;
   }
   .scope-banner p {
-    font-size: 10px;
+    font-size: 14px;
   }
   .brand-panel {
     display: block;
@@ -1046,7 +1046,7 @@ footer b {
   }
   .primary {
     padding: 10px 13px;
-    font-size: 10px;
+    font-size: 14px;
   }
   .primary span {
     margin-left: 6px;
@@ -1077,14 +1077,14 @@ footer b {
     margin-bottom: 13px;
   }
   .service-card h3 {
-    font-size: 12px;
+    font-size: 16px;
   }
   .card-bottom {
     flex-wrap: wrap;
     gap: 8px;
   }
   .card-mode {
-    font-size: 7px;
+    font-size: 13px;
   }
   .updated {
     max-width: 150px;
@@ -1103,7 +1103,7 @@ footer b {
     width: 100%;
   }
   .result-bar > span {
-    font-size: 8px;
+    font-size: 13px;
   }
   .details-drawer {
     width: 100%;
@@ -1151,7 +1151,7 @@ footer b {
     font-size: 23px;
   }
   .brand-input-row input {
-    font-size: 11px;
+    font-size: 15px;
   }
   .card-mode {
     padding-bottom: 13px;
@@ -1178,7 +1178,7 @@ footer b {
   font-size: 24px;
 }
 .loaded-brand > p {
-  font-size: 12px;
+  font-size: 16px;
   color: #7d939a;
 }
 .brand-metadata {
@@ -1188,27 +1188,27 @@ footer b {
   margin: 24px 0;
 }
 .brand-metadata dt {
-  font-size: 9px;
-  color: #9babb0;
+  font-size: 14px;
+  color: #607680;
   margin-bottom: 7px;
 }
 .brand-metadata dd {
-  font-size: 11px;
+  font-size: 15px;
   margin: 0;
   overflow-wrap: anywhere;
   color: #516f78;
 }
 .brand-result-footer {
-  font-size: 9px;
+  font-size: 14px;
   display: flex;
   justify-content: space-between;
   gap: 18px;
-  color: #92a5ab;
+  color: #607680;
   padding-top: 17px;
   border-top: 1px solid #e9eff0;
 }
 .brand-hecs {
-  font-size: 10px;
+  font-size: 14px;
   color: #7b929b;
   margin-bottom: 20px;
 }
@@ -1228,17 +1228,17 @@ footer b {
   margin-top: 15px;
   border-radius: 8px;
   color: #ad7664;
-  font-size: 12px;
+  font-size: 16px;
 }
 .brand-error p {
-  font-size: 10px;
+  font-size: 14px;
   color: #ad8576;
   margin-top: 5px;
 }
 .brand-placeholder {
   padding: 16px 0 0;
-  font-size: 10px;
-  color: #96a7ad;
+  font-size: 14px;
+  color: #607680;
 }
 .assigned-status {
   display: flex;
@@ -1247,8 +1247,8 @@ footer b {
   margin-top: 17px;
 }
 .assigned-status p {
-  font-size: 10px;
-  color: #9b9a8a;
+  font-size: 14px;
+  color: #75643d;
 }
 .assigned-status .pending-badge {
   white-space: nowrap;
@@ -1271,7 +1271,7 @@ footer b {
     flex-wrap: wrap;
   }
   .brand-result-heading .mode-badge {
-    font-size: 8px;
+    font-size: 13px;
   }
   .brand-result-footer {
     display: block;
@@ -1285,5 +1285,203 @@ footer b {
   }
   .assigned-status p {
     margin-top: 8px;
+  }
+}
+
+/* Compact service selection: options appear only when requested. */
+.service-picker {
+  padding: 24px;
+}
+.service-picker > label {
+  display: block;
+  font-size: 18px;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+.service-picker > p {
+  font-size: 15px;
+  color: #526c78;
+  margin-bottom: 20px;
+}
+.picker-trigger {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 450;
+  padding: 14px 16px;
+}
+.picker-panel {
+  margin-top: 12px;
+  border: 1px solid #c9dad7;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fafcfb;
+}
+.picker-panel > input {
+  width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+}
+.picker-filters {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+.picker-filters select {
+  width: 100%;
+  font-size: 14px;
+  min-height: 44px;
+}
+.picker-results-meta {
+  font-size: 14px;
+  color: #526c78;
+  padding: 8px 0 12px;
+}
+.picker-options {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 6px;
+}
+.picker-option {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #e0e9e7;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  text-align: left;
+  padding: 14px;
+  background: white;
+}
+.picker-option[aria-selected="true"] {
+  background: #e4f2ec;
+}
+.picker-option > span:first-child {
+  min-width: 0;
+}
+.picker-option strong {
+  font-size: 16px;
+  display: block;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.picker-option code {
+  font-size: 14px;
+  color: #526c78;
+  display: block;
+  margin-top: 5px;
+}
+.picker-no-results {
+  padding: 20px 4px;
+  font-size: 16px;
+}
+.topbar,
+.catalog-title,
+.result-bar,
+.brand-result-footer {
+  flex-wrap: wrap;
+}
+input,
+select,
+button {
+  min-height: 44px;
+}
+.brand-panel {
+  align-items: flex-start;
+}
+.brand-panel form {
+  min-width: 0;
+}
+.brand-panel label {
+  font-size: 16px;
+}
+.brand-panel small {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.brand-intro p,
+.page-heading p {
+  font-size: 16px;
+}
+.brand-metadata dd {
+  font-size: 17px;
+}
+.brand-metadata dt {
+  font-size: 14px;
+}
+.loaded-brand > p,
+.detail-description {
+  font-size: 16px;
+}
+.details-drawer {
+  width: 650px;
+}
+.references small {
+  line-height: 1.6;
+}
+.scope-banner p,
+.assigned-status p {
+  font-size: 15px;
+}
+.stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 760px) {
+  .topbar {
+    gap: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .service-picker {
+    padding: 18px;
+  }
+  .picker-panel {
+    padding: 12px;
+  }
+  .picker-filters {
+    grid-template-columns: 1fr;
+  }
+  .brand-input-row {
+    flex-wrap: wrap;
+  }
+  .brand-input-row input {
+    width: 100%;
+    flex-basis: 100%;
+    font-size: 16px;
+  }
+  .brand-input-row button {
+    width: 100%;
+    font-size: 16px;
+  }
+  .details-drawer {
+    width: 100%;
+  }
+  .stat {
+    min-width: 0;
+  }
+  .stat-icon {
+    display: none;
+  }
+  .metadata {
+    grid-template-columns: 1fr;
+  }
+  .references li > div {
+    flex-wrap: wrap;
+  }
+  .updated {
+    max-width: none;
+    text-align: left;
+  }
+  .brand-result-footer {
+    overflow-wrap: anywhere;
   }
 }

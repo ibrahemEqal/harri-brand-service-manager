@@ -1,134 +1,56 @@
 import { test, expect } from "@playwright/test";
-test("readable Brand overview and searchable dropdown replace the full catalog grid", async ({
+test("auto generate and simulate one-click export without Harri requests", async ({
   page,
 }) => {
-  const methods: string[] = [];
+  const requests: string[] = [];
   await page.route("**/*", async (route) => {
     const url = new URL(route.request().url());
     if (!["127.0.0.1", "localhost"].includes(url.hostname))
       throw new Error("Unexpected external request");
     if (url.pathname.startsWith("/api/"))
-      methods.push(route.request().method());
+      requests.push(`${route.request().method()} ${url.pathname}`);
     await route.continue();
   });
   await page.goto("/");
-  await page.getByLabel("Brand ID", { exact: true }).fill("18619889");
-  await page.getByRole("button", { name: "Load Services" }).click();
+  await expect(page.getByText("MOCK MODE")).toBeVisible();
+  await page.getByLabel("Brand ID").fill("18619889");
+  await page.getByRole("button", { name: "Load Brand" }).click();
+  await expect(page.getByRole("heading", { name: "sds" })).toBeVisible();
+  await expect(page.getByText(/^Auto Group /)).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "sds", exact: true }),
+    page.getByRole("button", { name: "Simulate Export" }),
   ).toBeVisible();
-  await expect(page.getByRole("option")).toHaveCount(0);
-  const trigger = page.getByRole("button", {
-    name: "Search and select a service",
-  });
-  await trigger.click();
-  await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(166);
-  const search = page.getByRole("combobox", { name: "Search services" });
   expect(
-    await search.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
-  ).toBeGreaterThanOrEqual(16);
-  await search.fill("HARRI_AI_SUMMARY");
-  await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(1);
-  await search.press("Enter");
+    requests.filter((item) => item === "POST /api/groups/execute"),
+  ).toHaveLength(0);
+  await page.getByRole("button", { name: "Simulate Export" }).click();
+  await expect(page.getByText("Simulation complete")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Selected services (1)", exact: true }),
+    page.getByText("Simulated only. No Group was created in Harri."),
   ).toBeVisible();
-  await search.fill("POS");
-  await page
-    .getByRole("listbox")
-    .getByRole("option")
-    .filter({ has: page.locator("code", { hasText: /^POS$/ }) })
-    .click();
-  await expect(
-    page.getByRole("heading", { name: "Selected services (2)", exact: true }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Details", exact: true })
-    .first()
-    .click();
-  await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Group 5", exact: true }),
-  ).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "إضافة الخدمات (Preview)", exact: true })
-    .click();
-  await expect(
-    page.getByText("واجهة فقط — لم تُرسل أي طلبات إضافة إلى Harri.", {
-      exact: true,
-    }),
-  ).toBeVisible();
-  await trigger.click();
-  await search.fill("");
-  await page.getByLabel("Platform", { exact: true }).selectOption("TEAM");
-  await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(64);
-  await page
-    .getByLabel("Service mode", { exact: true })
-    .selectOption("STANDARD");
-  await page.getByLabel("Sort services").selectOption("desc");
-  await search.fill("no-such-service-xyz");
-  await expect(
-    page.getByText("No matching services. Try another search or filter."),
-  ).toBeVisible();
-  await search.press("Escape");
-  await expect(page.getByRole("listbox")).toHaveCount(0);
+  expect(
+    requests.filter((item) => item === "POST /api/groups/execute"),
+  ).toHaveLength(1);
+  expect(requests.some((item) => item.includes("/api/services"))).toBe(false);
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download report" }).click();
+  expect((await download).suggestedFilename()).toMatch(
+    /^group-18619889-.*\.json$/,
+  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  expect(methods.every((method) => method === "GET")).toBe(true);
 });
-test("unknown mock Brand does not fake a lookup and global services stay in dropdown", async ({
-  page,
-}) => {
+test("invalid Brand never generates a group", async ({ page }) => {
   await page.goto("/");
-  await page.getByLabel("Brand ID", { exact: true }).fill("123");
-  await page.getByRole("button", { name: "Load Services" }).click();
-  await expect(page.getByRole("alert")).toContainText("Brand lookup failed");
+  await page.getByLabel("Brand ID").fill("999");
+  await page.getByRole("button", { name: "Load Brand" }).click();
+  await expect(page.getByRole("alert")).toContainText(
+    "mock snapshot contains only Brand",
+  );
   await expect(
-    page.getByRole("heading", { name: "sds", exact: true }),
+    page.getByRole("button", { name: "Simulate Export" }),
   ).toHaveCount(0);
-  await expect(page.getByRole("listbox")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Search and select a service" }),
-  ).toBeVisible();
 });
-for (const state of ["empty", "auth", "failure"] as const)
-  test(`catalog ${state} state is explicit`, async ({ page }) => {
-    await page.route("**/api/services", async (route) => {
-      if (state === "empty")
-        await route.fulfill({
-          json: {
-            mode: "mock",
-            scope: "global",
-            source: "attached-fixture",
-            fetchedAt: new Date().toISOString(),
-            services: [],
-          },
-        });
-      else
-        await route.fulfill({
-          status: state === "auth" ? 401 : 502,
-          json: {
-            code: state === "auth" ? "AUTHENTICATION_ERROR" : "REQUEST_FAILED",
-            error: "Test error: configure server session or connectivity.",
-          },
-        });
-    });
-    await page.goto("/");
-    await page.getByLabel("Brand ID", { exact: true }).fill("18619889");
-    await page.getByRole("button", { name: "Load Services" }).click();
-    await expect(
-      page.getByRole("heading", {
-        name:
-          state === "empty"
-            ? "The catalog is empty"
-            : state === "auth"
-              ? "Authentication required"
-              : "Unable to load the catalog",
-      }),
-    ).toBeVisible();
-  });

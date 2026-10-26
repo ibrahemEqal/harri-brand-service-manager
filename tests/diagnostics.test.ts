@@ -8,7 +8,7 @@ import {
   loadRuntimeConfig,
   safeAuthSummary,
 } from "../server/runtime-config.ts";
-import { CatalogClient } from "../server/catalog.ts";
+import { BrandClient } from "../server/brand-client.ts";
 import { readConfig } from "../server/config.ts";
 test("project .env overrides stale inherited tool settings, without exposing credential values", () => {
   const dir = mkdtempSync(join(tmpdir(), "harri-config-"));
@@ -70,7 +70,7 @@ test("401 and redirects expose exact status while hiding all response/header con
     [302, "UPSTREAM_REDIRECT"],
     [307, "UPSTREAM_REDIRECT"],
   ] as const) {
-    const client = new CatalogClient(config, async () => ({
+    const client = new BrandClient(config, async () => ({
       get: async () => ({
         ok: () => false,
         status: () => status,

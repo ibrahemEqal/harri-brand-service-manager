@@ -1,4 +1,4 @@
-import { ApiError } from "./catalog.ts";
+import { ApiError } from "./errors.ts";
 export function validateBrandId(value: unknown): string {
   if (
     typeof value !== "string" ||

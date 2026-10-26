@@ -1,12 +1,8 @@
-# Harri Brand Service Manager v0.1
+# Harri Group Creator
 
-A local Harri BAM QA dashboard with read access and separately gated test Group creation. React, TypeScript, Vite, Tailwind CSS, Node.js/Express and Playwright APIRequestContext.
+Local QA tool for an existing approved SSO test Brand. Enter the Brand ID, view automatically generated Group data, and click **Export to Harri** to submit the Group once. There is no Service catalog or Service activation flow.
 
-Enter a Brand ID to load that Brand's details and the complete global service catalog through the backend. Services stay collapsed in a searchable dropdown. Open it to search names/codes/descriptions, filter platform and mode, sort alphabetically and inspect nested dependency/exclusion/group details. Keyboard users can use the search field with Arrow keys, Enter and Escape. Main text and inputs use a larger readable type scale.
-
-## Run locally
-
-Requires Node.js 22+ and npm. From the repository root:
+## Setup
 
 ```bash
 npm ci
@@ -14,117 +10,45 @@ cp .env.example .env
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. Backend binds to **127.0.0.1:3001**. With default Mock Mode, enter **18619889** and click **Load Services**. The UI displays the supplied `sds` Brand snapshot and all **166 services** from the attached JSON (102 HARRI, 64 TEAM). Other IDs return an explicit mock 404; the tool never relabels the same snapshot as another Brand.
+Open `http://127.0.0.1:5173`. Mock Mode is the default. Enter mock Brand ID `18619889`, then **Simulate Export**; it does not contact Harri. The Group name is automatically generated with a UUID fragment. The example values supplied for this specific test are filled server-side: US, Asia/Dubai, SAT, 08:00–20:00, one-hour extension, and the supplied Auto Assign, break, overtime and payment settings. This is one captured example, not a general Group schema. Review “View complete generated data” to see every field.
 
-The Brand fixture is based on the response supplied during implementation. Email and business identifier were omitted. Every mock result is clearly labeled **MOCK SNAPSHOT — NOT LIVE**. The catalog fixture is the full, unchanged attached JSON. It is read by the backend, not hardcoded into the frontend.
+**No locations are selected**: `brands: []` is sent because the provided request contained no selected locations. This does not mean the Group is associated with all locations. Selecting locations is not supported because its request format was not provided.
 
-### Production build, still local
+## Live test setup
 
-```bash
-npm run build
-npm start
-```
-
-Open **http://127.0.0.1:3001**. Vite's development proxy assumes port 3001; if changing PORT, update `vite.config.ts` too. Do not expose this single-user local prototype as a public multi-user app.
-
-## Confirmed Harri GET endpoints
-
-| Purpose                | Endpoint                                                                         |
-| ---------------------- | -------------------------------------------------------------------------------- |
-| Brand details          | `https://gateway.harriprep.com/account-management/api/v1/admin/brands/{brandId}` |
-| Global service catalog | `https://gateway.harriprep.com/account-management/api/v1/admin/service`          |
-
-The Brand path and response were supplied for ID 18619889. The adapter reads the supplied `{data: {...}}` structure and also supports the direct Brand object shown alongside it. It validates that the returned ID matches the requested ID before displaying anything. Core Brand fields and supported nested currency/time-zone/HEC fields are validated; only validated display fields are forwarded. Arbitrary upstream properties and the business identifier are not forwarded.
-
-The catalog parser reads `data.services` and validates every service, nullable description, prerequisite, mutual exclusion, implicit dependency and prerequisite group. Missing/malformed required fields reject the response rather than silently returning a partial catalog. New non-empty platform or mode values can appear dynamically in the filters. Nested groups are shown without inventing AND/OR semantics.
-
-**Assigned/activated Brand services are not implemented:** no read endpoint or response contract has been supplied for them. A Brand's `status: ACTIVE` describes the Brand, not its services. The global catalog never labels a service active or inactive for the selected Brand.
-
-## Live Mode — ready for authorized local testing
-
-**No authenticated Harri requests were executed during development.** Mock and stub tests do not establish that an actual session has permission to read these endpoints. Brand integration is implemented, but successful live retrieval remains unverified until an explicitly approved authenticated test.
-
-After obtaining explicit approval to perform the read-only requests, configure the server's local `.env`:
+The application does not automatically verify that a Brand has SSO. Use only the approved SSO test Brand. Group writes are disabled by default even when live Brand reads are enabled. After explicit authorization for the test Brand, configure `.env` on your machine and restart:
 
 ```dotenv
 HARRI_MODE=live
 HARRI_ALLOW_REAL_REQUESTS=true
 HARRI_AUTH_HEADER_NAME=Authorization
-HARRI_AUTH_HEADER_VALUE=<full approved header value>
-# Optional, only when required by your approved session:
+HARRI_AUTH_HEADER_VALUE="<full approved Authorization value>"
 HARRI_COOKIE=
+HARRI_ALLOW_GROUP_CREATION=true
+HARRI_GROUP_ALLOWED_BRAND_ID=18606124
 PORT=3001
 ```
 
-`Authorization` is an example header name. Configure the actual header name and **complete value** used by your approved Harri session; the tool does not assume or prefix Bearer. For cookie-only authentication, set `HARRI_AUTH_HEADER_NAME=Cookie` and place the full approved cookie value in `HARRI_AUTH_HEADER_VALUE`; leave `HARRI_COOKIE` empty. Optional `HARRI_COOKIE` is for combining a named authentication header with a session cookie when confirmed necessary. Restart the backend after changes. Never send credentials into React, paste them into screenshots, use `VITE_` variables for secrets or commit them. `.env` and variants are gitignored.
+Use the actual authentication scheme and optional cookie required by the approved session. Never commit `.env` or send its contents to anyone. The configured allowed Brand ID is an explicit server-side allowlist, not an automatic SSO check. The Group defaults must be reviewed for suitability in that test environment before exporting.
 
-Clicking **Load Services** initiates the two Harri GET requests in Live Mode. A Group POST can be initiated only by explicitly enabling Group creation and confirming a preview as documented below. The status endpoint does not contact Harri. Requests use Playwright APIRequestContext, a 15-second timeout, normal TLS certificate checks, zero redirects, no automatic retries and disposed request contexts. The Brand ID is validated before interpolation; users cannot submit arbitrary upstream URLs or payloads.
+Clicking **Export to Harri** posts the generated data to the confirmed Group endpoint. This button is the user’s action to create the Group. In Mock Mode it is labeled **Simulate Export**. On a successful acknowledged request, a local JSON report can be downloaded. The known response does not include a Group ID, and no independent read-back contract has been confirmed, so verify the new Group in BAM manually. If the request times out or returns an unexpected response, the outcome is uncertain; check BAM before preparing another Group. Requests are never automatically retried.
 
-Errors distinguish invalid IDs (400), rejected authentication (401), access denied (403), Brand not found/not visible (404), invalid responses (502), and connectivity/timeouts (502). Redirect responses are reported separately as UPSTREAM_REDIRECT with their exact HTTP status; redirects are never followed. HTTP 401 is reported separately as rejected authentication. For a catalog-only HTTP 404, the backend returns the full provided snapshot with source `attached-fixture-fallback` and an explicit warning. Brand data never falls back to a different source, and authentication/permission failures do not trigger catalog fallback. Independent Brand/catalog results remain separately labeled when one request fails.
+A generated preview is valid for five minutes. Repeating the same preview ID cannot send a second request in the same process; concurrent writes for the same Brand/name are blocked. This in-memory protection does not survive restart and is not durable idempotency. The generator creates a new name for each new preview, so check an uncertain prior attempt before trying again.
 
-## Local routes and boundaries
+## Routes and security
 
-Application-owned endpoints (not additional Harri endpoints):
+- `GET /api/status` and `GET /api/brand?brandId=...`.
+- `POST /api/groups/preview` generates data locally; it never contacts Harri.
+- `POST /api/groups/execute` sends at most one POST for a preview when live creation is enabled and the Brand matches the configured ID.
+- Other write methods/routes are rejected. Browser POSTs require an allowed local Origin. The server binds to loopback, does not expose auth headers, does not follow redirects, and never logs credentials.
 
-- `GET /api/status`: mode and capabilities, with no authentication values.
-- `GET /api/brand?brandId=...`: Brand lookup using the confirmed path above.
-- `GET /api/services`: complete global catalog.
-
-POST is restricted to `/api/groups/preview` and `/api/groups/execute`; other write routes return 405. Group routes require an approved local Origin. There are no service activation, create-Brand, edit, or delete routes. Local HEAD requests provide metadata without performing Harri requests. The Group POST is separately gated and disabled by default. No sensitive headers or raw upstream responses are logged or returned in errors. Loopback binding, Host/Origin validation and same-origin access limit this local tool. Responses use `Cache-Control: no-store`.
-
-## Verify
+## Verification
 
 ```bash
-npm test
 npm run build
+npm test
 npx playwright install chromium --only-shell
 npm run test:e2e
 ```
 
-Unit and backend tests cover full fixture preservation, malformed responses, nullable descriptions, nested groups, search/filter/sort, ID validation/matching, mock Brand identity, HTTP 401/403/404, configurable authentication, real-request gates, timeout handling, cleanup and denial of write methods. Live transport tests inject response stubs; they never call Harri. Browser tests cover desktop and mobile Brand/catalog workflow, filters, drawer, empty/error states and only-GET browser traffic. Stop any existing dev server before browser tests.
-
-## Project structure
-
-- `src/components/`: reusable searchable service picker, Brand overview and accessible native-dialog details drawer.
-- `src/api.ts`: frontend HTTP client and safe error handling.
-- `shared/`: TypeScript contracts, runtime response validation and search/filter functions.
-- `server/`: configuration, Playwright API adapters and local Express routes.
-- `fixtures/`: supplied service response and sanitized Brand snapshot.
-- `tests/`: parser/filter, transport, HTTP and browser tests.
-
-## Next integration: assigned services
-
-In Chrome DevTools → Network → Fetch/XHR, clear the request list and open an existing Brand's Services view in Harri BAM. Find the **GET** request whose response enumerates that specific Brand's assigned services. Provide its URL, method and sanitized response, with Authorization/Cookie/session values removed. Until that contract is confirmed, service activation status remains **unavailable**. Do not infer assignments from catalog prerequisites, Brand status or service mode.
-
-## Troubleshooting live authentication
-
-The server reads `.env` next to the project `package.json`, independently of the current shell directory. Settings present in that file take precedence over inherited HARRI settings and PORT. Missing keys can still come from the process environment. Restart the backend after editing `.env`; changing that file alone does not restart the running process.
-
-Startup prints the configuration source, authentication header **name**, whether a cookie is configured, and (for Bearer Authorization) a format-valid boolean. It never prints credential values, token fragments or fingerprints. A false format check is a diagnostic hint, not a claim that the token itself is valid or invalid. Cookie-only auth must not be configured twice: leave HARRI_COOKIE empty when HARRI_AUTH_HEADER_NAME=Cookie.
-
-If authentication fails, the UI now distinguishes `HTTP 401`, `HTTP 403`, and redirect statuses such as `HTTP 302`. Do not infer that a redirect is necessarily a login redirect; its destination is not returned to the UI. The raw response body and Location/Set-Cookie headers stay private. A working browser session alone does not prove the server is sending an equivalent authenticated request. Share only the new HTTP status, the safe startup summary, and the required header names when diagnosing. Never share the values. No extra authentication scheme or undocumented headers are guessed.
-
-## Service selection and Add preview
-
-The searchable dropdown supports multiple selections and shows all catalog entries. Selected services appear in a summary with Details and Remove actions. The `إضافة الخدمات (Preview)` button is enabled only with a loaded Brand and at least one selection. Clicking it displays a local preview and explicitly states that nothing was sent to Harri. It does not call an activation API, simulate a success, or change any Brand.
-
-A catalog HTTP 404 no longer hides the service selector: the backend loads the complete supplied 166-service fixture, labeled as a snapshot fallback. This keeps selection usable without asserting that the live catalog request succeeded. The underlying live 404 still requires investigation; no alternative endpoint is invented.
-
-## Group Management: confirmed example and limits
-
-The user supplied `POST https://gateway.harriprep.com/scheduling/api/v1/admin/brands/{brandId}/settings/groups` with an example Group payload and `{"data":"Success","status":"SUCCESS","status_code":200}` response. Only the name, country code, time zone, weekday and business hours are configurable in the UI; the remaining fields use the observed example, including the SALARIED / HOURLY / NONE payment entry given in the earlier example. The last pasted message was truncated in that entry; review the complete preview against an actual sanitized request before any real execution. This is not a generic group-settings schema.
-
-The user stated `brands: []` occurred because no locations were selected. This version supports **no location selection** and always sends `brands: []`; it does not claim that any Location is attached. The checkbox explicitly confirms this. SSO status cannot be verified from any confirmed API in this project; the operator must verify the Brand manually.
-
-In Mock Mode, load mock Brand 18619889, enter a Group name and preview; the final button only simulates a result. No real request is made.
-
-For a real Group request, after explicit approval, locally configure BOTH the existing live read settings AND these settings, then restart the backend:
-
-```dotenv
-HARRI_ALLOW_GROUP_CREATION=true
-HARRI_GROUP_ALLOWED_BRAND_ID=18606124
-```
-
-The allowed ID must be the approved SSO test Brand. The server does not infer or verify SSO. Review every field in the generated payload, type the matching Brand ID, explicitly acknowledge zero locations and click Create Group. The sample defaults can have business impact; they are not universal defaults.
-
-A response matching the supplied success example is labeled **acknowledged**, not independently verified: the provided response contains no Group ID and no read-back contract was confirmed. Check Group Management manually. If there is a timeout, unexpected response or uncertain result, inspect the existing Groups before retrying. The tool makes no automatic retries. A preview is processed at most once in the same running process, and concurrent or repeated live attempts with the same Brand/name are blocked unless explicitly rejected by Harri. These protections are in memory and do not survive server restarts or cover other clients.
+Unit and backend tests inject fake Harri responses; they do not make real requests. Browser tests start a dedicated mock-only server that ignores the user's `.env`, so they cannot create real Groups. Browser installation is required for the UI tests. No real Group creation was executed while developing this version.

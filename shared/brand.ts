@@ -1,4 +1,4 @@
-import type { OperatingMode } from "./catalog.ts";
+export type OperatingMode = "mock" | "live";
 export interface Brand {
   id: number;
   name: string;

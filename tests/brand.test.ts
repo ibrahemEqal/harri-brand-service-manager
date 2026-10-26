@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { parseBrand } from "../shared/brand.ts";
-import { CatalogClient } from "../server/catalog.ts";
+import { BrandClient } from "../server/brand-client.ts";
 import { readConfig } from "../server/config.ts";
 const fixture = JSON.parse(
   readFileSync(new URL("../fixtures/brand.json", import.meta.url), "utf8"),
@@ -52,7 +52,7 @@ test("Brand parser rejects ID mismatch, null/incorrect required fields and malfo
     assert.throws(() => parseBrand(value, "18619889"));
 });
 test("mock Brand IDs are functional: one supplied snapshot, unknown IDs return explicit mock 404", async () => {
-  const client = new CatalogClient(readConfig({}), async () => {
+  const client = new BrandClient(readConfig({}), async () => {
     throw new Error("No external calls");
   });
   const result = await client.loadBrand("18619889");
@@ -72,7 +72,7 @@ test("mock Brand IDs are functional: one supplied snapshot, unknown IDs return e
 test("live Brand adapter uses exactly confirmed path and GET and validates requested ID", async () => {
   let calls = 0,
     disposed = 0;
-  const client = new CatalogClient(config, async () => ({
+  const client = new BrandClient(config, async () => ({
     get: async (url, options) => {
       calls++;
       assert.equal(
@@ -98,7 +98,7 @@ for (const [status, code] of [
   [404, "BRAND_NOT_FOUND"],
 ] as const) {
   test(`Brand HTTP ${status} is distinguished as ${code}`, async () => {
-    const client = new CatalogClient(config, async () => ({
+    const client = new BrandClient(config, async () => ({
       get: async () => ({
         ok: () => false,
         status: () => status,
@@ -116,7 +116,7 @@ for (const [status, code] of [
   });
 }
 test("live mismatched Brand data fails closed rather than displaying a different Brand", async () => {
-  const client = new CatalogClient(config, async () => ({
+  const client = new BrandClient(config, async () => ({
     get: async () => ({
       ok: () => true,
       status: () => 200,

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RequestError, postJson } from "../api.ts";
-import type { OperatingMode } from "../../shared/catalog.ts";
+import type { OperatingMode } from "../../shared/brand.ts";
 import type { buildObservedPayload } from "../../shared/group.ts";
 type Preview = {
   id: string;
@@ -10,8 +10,12 @@ type Preview = {
   expiresAt: number;
 };
 type Report = {
+  brandId: string;
+  name: string;
+  mode: OperatingMode;
   status: "mock_success" | "acknowledged" | "rejected" | "uncertain";
   message: string;
+  verification: "mock_only" | "not_supported";
 };
 export function GroupDraft({
   brandId,
@@ -22,277 +26,229 @@ export function GroupDraft({
   mode: OperatingMode;
   creationAvailable: boolean;
 }) {
-  const [name, setName] = useState(""),
-    [country, setCountry] = useState("US"),
-    [timezone, setTimezone] = useState("Asia/Dubai"),
-    [day, setDay] = useState("SAT");
-  const [open, setOpen] = useState("08:00"),
-    [close, setClose] = useState("20:00"),
-    [extension, setExtension] = useState("1");
-  const [preview, setPreview] = useState<Preview | null>(null),
-    [confirmation, setConfirmation] = useState(""),
-    [ack, setAck] = useState(false),
+  const [plan, setPlan] = useState<Preview | null>(null),
     [report, setReport] = useState<Report | null>(null),
     [error, setError] = useState(""),
+    [loading, setLoading] = useState(true),
     [busy, setBusy] = useState(false),
-    [attempted, setAttempted] = useState(false);
-  function clear() {
-    setPreview(null);
-    setConfirmation("");
-    setAck(false);
+    [attempted, setAttempted] = useState(false),
+    [retryVerified, setRetryVerified] = useState(false),
+    [generation, setGeneration] = useState(0);
+  useEffect(() => {
+    let current = true;
+    setPlan(null);
     setReport(null);
     setError("");
+    setLoading(true);
     setAttempted(false);
-  }
-  function seconds(value: string) {
-    const [hours, minutes] = value.split(":").map(Number);
-    return hours * 3600 + minutes * 60;
-  }
-  async function prepare() {
-    setBusy(true);
-    setError("");
-    setReport(null);
-    setAttempted(false);
-    try {
-      setPreview(
-        await postJson<Preview>("/api/groups/preview", {
-          brandId: String(brandId),
-          input: {
-            name,
-            countryCode: country,
-            timeZoneName: timezone,
-            startDayOfWeek: day,
-            openTime: seconds(open),
-            closeTime: seconds(close),
-            closeTimeExtension: Number(extension) * 3600,
-          },
-        }),
-      );
-      setConfirmation("");
-      setAck(false);
-    } catch (e) {
+    setRetryVerified(false);
+    postJson<Preview>("/api/groups/preview", { brandId: String(brandId) })
+      .then((result) => {
+        if (current) setPlan(result);
+      })
+      .catch((e) => {
+        if (current)
+          setError(
+            e instanceof Error ? e.message : "Could not generate Group data.",
+          );
+      })
+      .finally(() => {
+        if (current) setLoading(false);
+      });
+    return () => {
+      current = false;
+    };
+  }, [brandId, generation]);
+  async function create() {
+    if (!plan || busy || attempted || !creationAvailable) return;
+    if (Date.now() > plan.expiresAt) {
       setError(
-        e instanceof Error ? e.message : "Could not prepare the preview.",
+        "The generated Group expired. Generate new data before exporting.",
       );
-    } finally {
-      setBusy(false);
+      return;
     }
-  }
-  async function execute() {
-    if (!preview || busy || attempted) return;
-    setBusy(true);
     setAttempted(true);
+    setBusy(true);
     setError("");
     try {
       setReport(
         await postJson<Report>("/api/groups/execute", {
-          previewId: preview.id,
-          confirmation,
-          acknowledgeNoLocations: ack,
+          previewId: plan.id,
+          confirmation: String(brandId),
+          acknowledgeNoLocations: true,
         }),
       );
     } catch (e) {
-      const detail =
-        e instanceof RequestError ? e.message : "No response was received.";
+      const reason =
+        e instanceof RequestError
+          ? e.message
+          : "The request could not be completed.";
       setError(
-        `${detail} If the request was submitted, check Group Management before preparing another preview.`,
+        `${reason} If the request was submitted, check Harri Group Management before another attempt.`,
       );
     } finally {
       setBusy(false);
     }
   }
+  function download() {
+    if (!report || !plan) return;
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          {
+            generatedAt: new Date().toISOString(),
+            report,
+            payload: plan.payload,
+          },
+          null,
+          2,
+        ),
+      ],
+      { type: "application/json" },
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `group-${brandId}-${plan.id.slice(0, 8)}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const needsCheck = attempted && (!report || report.status === "uncertain");
   return (
-    <section className="group-draft panel" aria-labelledby="group-draft-title">
-      <div className="section-kicker">TEAM SCHEDULING / GROUP MANAGEMENT</div>
-      <h2 id="group-draft-title">Create a Group</h2>
-      <p>
-        Brand ID {brandId} ·{" "}
-        {mode === "mock"
-          ? "MOCK: no Harri changes"
-          : "LIVE: designated test Brand only"}
-        . The SSO condition must be checked manually.
-      </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void prepare();
-        }}
-      >
-        <fieldset disabled={busy}>
-          <div className="group-draft-fields">
-            <label>
-              Group name
-              <input
-                required
-                maxLength={120}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  clear();
-                }}
-              />
-            </label>
-            <label>
-              Country code
-              <input
-                required
-                pattern="[A-Z]{2}"
-                maxLength={2}
-                value={country}
-                onChange={(e) => {
-                  setCountry(e.target.value.toUpperCase());
-                  clear();
-                }}
-              />
-            </label>
-            <label>
-              Time zone
-              <input
-                required
-                maxLength={100}
-                value={timezone}
-                onChange={(e) => {
-                  setTimezone(e.target.value);
-                  clear();
-                }}
-              />
-            </label>
-            <label>
-              Start day
-              <select
-                value={day}
-                onChange={(e) => {
-                  setDay(e.target.value);
-                  clear();
-                }}
-              >
-                {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
-                  (value) => (
-                    <option key={value}>{value}</option>
-                  ),
-                )}
-              </select>
-            </label>
-            <label>
-              Open time
-              <input
-                required
-                type="time"
-                value={open}
-                onChange={(e) => {
-                  setOpen(e.target.value);
-                  clear();
-                }}
-              />
-            </label>
-            <label>
-              Close time
-              <input
-                required
-                type="time"
-                value={close}
-                onChange={(e) => {
-                  setClose(e.target.value);
-                  clear();
-                }}
-              />
-            </label>
-            <label>
-              Hours extension
-              <input
-                required
-                type="number"
-                min="0"
-                max="24"
-                step="0.25"
-                value={extension}
-                onChange={(e) => {
-                  setExtension(e.target.value);
-                  clear();
-                }}
-              />
-            </label>
-          </div>
-        </fieldset>
-        <p>
-          Example settings are prefilled from the supplied request. Review the
-          entire payload before confirming. No locations are selected in this
-          version.
+    <section className="group panel" aria-labelledby="group-title">
+      <div className="group-heading">
+        <div>
+          <div className="eyebrow">02 · GROUP SETTINGS</div>
+          <h2 id="group-title">Your Group is ready</h2>
+          <p>Data is generated automatically from the provided example.</p>
+        </div>
+        <span className="step-icon">✦</span>
+      </div>
+      {loading ? (
+        <p className="state" role="status">
+          Generating Group data…
         </p>
-        <button className="primary" disabled={busy} type="submit">
-          {busy ? "Working…" : "Preview Group"}
-        </button>
-      </form>
-      {error && (
-        <div className="brand-error" role="alert">
+      ) : error && !plan ? (
+        <div className="alert" role="alert">
           {error}
-        </div>
-      )}
-      {preview && (
-        <div className="local-add-preview">
-          <strong>
-            Review {preview.mode.toUpperCase()} request · Brand{" "}
-            {preview.brandId}
-          </strong>
-          <p>
-            Example settings include Auto Assign, break, overtime and payment
-            fields. Confirm these are appropriate for this Brand.
-          </p>
-          <pre>{JSON.stringify(preview.payload, null, 2)}</pre>
-          <p>
-            Preview expires after five minutes. No locations will be assigned.
-          </p>
-          <label className="group-confirm">
-            Type Brand ID to confirm
-            <input
-              value={confirmation}
-              disabled={busy || !!report || attempted}
-              onChange={(e) => setConfirmation(e.target.value)}
-            />
-          </label>
-          <label className="group-ack">
-            <input
-              type="checkbox"
-              checked={ack}
-              disabled={busy || !!report || attempted}
-              onChange={(e) => setAck(e.target.checked)}
-            />{" "}
-            I confirm that zero locations will be assigned.
-          </label>
-          {mode === "live" && !creationAvailable && (
-            <p>
-              Live Group creation is disabled in the local server configuration.
-              You can review this preview.
-            </p>
-          )}
-          <button
-            type="button"
-            className="primary"
-            disabled={
-              busy ||
-              !creationAvailable ||
-              attempted ||
-              !!report ||
-              confirmation !== String(brandId) ||
-              !ack
-            }
-            onClick={() => void execute()}
-          >
-            {busy
-              ? "Sending…"
-              : mode === "mock"
-                ? "Simulate group creation"
-                : "Create Group in Harri"}
+          <button type="button" onClick={() => setGeneration((v) => v + 1)}>
+            Try again
           </button>
-          {report && (
-            <div role="status" className="group-report">
-              <strong>
-                {report.status.replaceAll("_", " ").toUpperCase()}
-              </strong>
-              <p>{report.message}</p>
-            </div>
-          )}
         </div>
+      ) : (
+        plan && (
+          <>
+            <div className="group-data">
+              <div>
+                <span>GROUP NAME</span>
+                <strong>{plan.payload.name}</strong>
+              </div>
+              <div>
+                <span>COUNTRY</span>
+                <strong>{plan.payload.settings.country_code}</strong>
+              </div>
+              <div>
+                <span>TIME ZONE</span>
+                <strong>{plan.payload.settings.time_zone_name}</strong>
+              </div>
+              <div>
+                <span>START DAY</span>
+                <strong>{plan.payload.settings.start_day_of_week}</strong>
+              </div>
+              <div>
+                <span>HOURS</span>
+                <strong>08:00–20:00</strong>
+              </div>
+              <div>
+                <span>LOCATIONS</span>
+                <strong>None selected</strong>
+              </div>
+            </div>
+            <div className="notice">
+              <strong>Example settings</strong>
+              <p>
+                US · Asia/Dubai · Saturday · 08:00–20:00 · 1-hour extension.
+                Auto Assign, breaks and payment settings use the supplied
+                example. No locations will be assigned.
+              </p>
+            </div>
+            <details className="payload-details">
+              <summary>View complete generated data</summary>
+              <pre>{JSON.stringify(plan.payload, null, 2)}</pre>
+            </details>
+            {!creationAvailable && mode === "live" && (
+              <p className="setup-note">
+                Live Group creation is disabled. Enable it for your approved
+                test Brand in the local .env file.
+              </p>
+            )}
+            {error && (
+              <div className="alert" role="alert">
+                {error}
+              </div>
+            )}
+            {report && (
+              <div className={`report ${report.status}`} role="status">
+                <strong>
+                  {report.status === "mock_success"
+                    ? "Simulation complete"
+                    : report.status === "acknowledged"
+                      ? "Harri acknowledged the request"
+                      : report.status === "rejected"
+                        ? "Request rejected"
+                        : "Outcome unknown"}
+                </strong>
+                <p>{report.message}</p>
+                {(report.status === "mock_success" ||
+                  report.status === "acknowledged") && (
+                  <button type="button" onClick={download}>
+                    Download report
+                  </button>
+                )}
+              </div>
+            )}
+            {needsCheck && (
+              <label className="check-before-retry">
+                <input
+                  type="checkbox"
+                  checked={retryVerified}
+                  onChange={(event) => setRetryVerified(event.target.checked)}
+                />{" "}
+                I checked Group Management before preparing another Group.
+              </label>
+            )}
+            <div className="group-actions">
+              {attempted ? (
+                <button
+                  type="button"
+                  disabled={busy || (needsCheck && !retryVerified)}
+                  onClick={() => setGeneration((v) => v + 1)}
+                >
+                  Prepare another Group
+                </button>
+              ) : (
+                <button
+                  className="export-button"
+                  type="button"
+                  disabled={!creationAvailable || busy}
+                  onClick={() => void create()}
+                >
+                  {busy
+                    ? "Sending…"
+                    : mode === "mock"
+                      ? "Simulate Export"
+                      : "Export to Harri"}{" "}
+                  <span>↗</span>
+                </button>
+              )}
+              <small>
+                {mode === "mock"
+                  ? "Mock mode: no Group will be created."
+                  : "Export sends one request to Harri for this Brand."}
+              </small>
+            </div>
+          </>
+        )
       )}
     </section>
   );

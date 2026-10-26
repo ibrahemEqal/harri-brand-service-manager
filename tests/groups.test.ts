@@ -1,18 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { GroupManager, type GroupContextFactory } from "../server/groups.ts";
-import { CatalogClient } from "../server/catalog.ts";
+import { BrandClient } from "../server/brand-client.ts";
 import { readConfig } from "../server/config.ts";
 import { createApp } from "../server/app.ts";
-const example = {
-  name: "Test Automation",
-  countryCode: "US",
-  timeZoneName: "Asia/Dubai",
-  startDayOfWeek: "SAT",
-  openTime: 28800,
-  closeTime: 72000,
-  closeTimeExtension: 3600,
-};
 const makeLive = (extra: Record<string, string> = {}) =>
   readConfig({
     HARRI_MODE: "live",
@@ -29,8 +20,8 @@ test("mock preview reproduces observed values with no locations and requires exp
     calls++;
     throw new Error("unexpected external call");
   });
-  const plan = manager.preview("18619889", example);
-  assert.equal(plan.payload.name, "Test Automation");
+  const plan = manager.preview("18619889");
+  assert.match(plan.payload.name, /^Auto Group /);
   assert.deepEqual(plan.payload.brands, []);
   assert.deepEqual(plan.payload.settings.business_day, {
     open_time: 28800,
@@ -59,7 +50,7 @@ test("live group creation requires separate opt-in and exact approved Brand ID",
       throw new Error("must not call");
     },
   );
-  const disabledPlan = disabled.preview("18606124", example);
+  const disabledPlan = disabled.preview("18606124");
   await assert.rejects(
     () => disabled.execute(disabledPlan.id, "18606124", true),
     /disabled/,
@@ -67,10 +58,7 @@ test("live group creation requires separate opt-in and exact approved Brand ID",
   const enabled = new GroupManager(makeLive(), async () => {
     throw new Error("must not call");
   });
-  assert.throws(
-    () => enabled.preview("18619889", example),
-    /not the configured/,
-  );
+  assert.throws(() => enabled.preview("18619889"), /not the configured/);
   assert.throws(
     () =>
       readConfig({
@@ -117,7 +105,7 @@ test("live transport posts confirmed payload once, checks acknowledgement and ne
     };
   };
   const manager = new GroupManager(makeLive(), factory);
-  const plan = manager.preview("18606124", example);
+  const plan = manager.preview("18606124");
   const report = await manager.execute(plan.id, "18606124", true);
   assert.equal(report.status, "acknowledged");
   assert.equal(report.verification, "not_supported");
@@ -125,11 +113,8 @@ test("live transport posts confirmed payload once, checks acknowledgement and ne
   assert.equal(disposed, 1);
   assert.deepEqual(await manager.execute(plan.id, "18606124", true), report);
   assert.equal(calls, 1);
-  const second = manager.preview("18606124", example);
-  await assert.rejects(
-    () => manager.execute(second.id, "18606124", true),
-    (e: any) => e.code === "CHECK_PREVIOUS_ATTEMPT",
-  );
+  const second = manager.preview("18606124");
+  assert.notEqual(second.payload.name, plan.payload.name);
 });
 test("timeouts and malformed success are uncertain and not automatically retried", async () => {
   for (const post of [
@@ -150,7 +135,7 @@ test("timeouts and malformed success are uncertain and not automatically retried
       },
       dispose: async () => {},
     }));
-    const plan = manager.preview("18606124", example);
+    const plan = manager.preview("18606124");
     const report = await manager.execute(plan.id, "18606124", true);
     assert.equal(report.status, "uncertain");
     assert.ok(!JSON.stringify(report).includes("secret"));
@@ -158,7 +143,7 @@ test("timeouts and malformed success are uncertain and not automatically retried
     assert.equal(calls, 1);
   }
 });
-test("concurrent attempts for the same Brand/name cannot both post", async () => {
+test("concurrent execution of one preview cannot post twice", async () => {
   let release!: () => void;
   const gate = new Promise<void>((resolve) => (release = resolve));
   let calls = 0;
@@ -178,15 +163,15 @@ test("concurrent attempts for the same Brand/name cannot both post", async () =>
     },
     dispose: async () => {},
   }));
-  const p1 = manager.preview("18606124", example),
-    p2 = manager.preview("18606124", example);
+  const p1 = manager.preview("18606124"),
+    p2 = p1;
   const first = manager.execute(p1.id, "18606124", true);
   await assert.rejects(() => manager.execute(p2.id, "18606124", true));
   release();
   await first;
   assert.equal(calls, 1);
 });
-test("bad values and expired previews are rejected without requests", async () => {
+test("expired previews are rejected without requests", async () => {
   let now = 0;
   const manager = new GroupManager(
     readConfig({}),
@@ -195,20 +180,13 @@ test("bad values and expired previews are rejected without requests", async () =
     },
     () => now,
   );
-  for (const input of [
-    { ...example, name: "" },
-    { ...example, countryCode: "USA" },
-    { ...example, openTime: 86400 },
-    { ...example, startDayOfWeek: "BAD" },
-  ])
-    assert.throws(() => manager.preview("1", input));
-  const p = manager.preview("1", example);
+  const p = manager.preview("1");
   now = 300001;
   await assert.rejects(() => manager.execute(p.id, "1", true));
 });
 test("local Group endpoints enforce Origin and reject all other write routes", async () => {
   const config = readConfig({});
-  const app = createApp(new CatalogClient(config), new GroupManager(config));
+  const app = createApp(new BrandClient(config), new GroupManager(config));
   const server = app.listen(0, "127.0.0.1");
   await new Promise<void>((resolve) => server.once("listening", resolve));
   const { port } = server.address() as { port: number };
@@ -241,7 +219,7 @@ test("local Group endpoints enforce Origin and reject all other write routes", a
     const result = await fetch(`${base}/api/groups/preview`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ brandId: "18619889", input: example }),
+      body: JSON.stringify({ brandId: "18619889" }),
     });
     assert.equal(result.status, 200);
     const plan = (await result.json()) as { id: string };

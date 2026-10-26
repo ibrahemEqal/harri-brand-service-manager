@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { request } from "playwright";
-import { buildObservedPayload, type GroupInput } from "../shared/group.ts";
+import { buildObservedPayload } from "../shared/group.ts";
 import { validateBrandId } from "./brand.ts";
-import { ApiError } from "./catalog.ts";
+import { ApiError } from "./errors.ts";
 import type { Config } from "./config.ts";
 
 type HttpResponse = {
@@ -38,44 +38,6 @@ type Plan = {
   state: "pending" | "running" | "done";
   report?: GroupReport;
 };
-function validateInput(raw: unknown): GroupInput {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw))
-    throw new ApiError(400, "INVALID_INPUT", "Group data is required.");
-  const value = raw as Record<string, unknown>;
-  function text(key: string, max: number): string {
-    const v = value[key];
-    if (typeof v !== "string" || !v.trim() || v.trim().length > max)
-      throw new ApiError(400, "INVALID_INPUT", `Invalid ${key}.`);
-    return v.trim();
-  }
-  function number(key: string, max: number): number {
-    const v = value[key];
-    if (typeof v !== "number" || !Number.isSafeInteger(v) || v < 0 || v > max)
-      throw new ApiError(400, "INVALID_INPUT", `Invalid ${key}.`);
-    return v;
-  }
-  const startDayOfWeek = text("startDayOfWeek", 3);
-  if (
-    !["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].includes(startDayOfWeek)
-  )
-    throw new ApiError(400, "INVALID_INPUT", "Invalid weekday code.");
-  const countryCode = text("countryCode", 2);
-  if (!/^[A-Z]{2}$/.test(countryCode))
-    throw new ApiError(
-      400,
-      "INVALID_INPUT",
-      "Country code must be two uppercase letters.",
-    );
-  return {
-    name: text("name", 120),
-    countryCode,
-    timeZoneName: text("timeZoneName", 100),
-    startDayOfWeek,
-    openTime: number("openTime", 86399),
-    closeTime: number("closeTime", 86399),
-    closeTimeExtension: number("closeTimeExtension", 86400),
-  };
-}
 export class GroupManager {
   private plans = new Map<string, Plan>();
   private attemptedNames = new Map<string, "running" | "settled">();
@@ -95,7 +57,7 @@ export class GroupManager {
         !!this.config.groupAllowedBrandId)
     );
   }
-  preview(brand: unknown, raw: unknown) {
+  preview(brand: unknown) {
     const brandId = validateBrandId(brand);
     if (
       this.mode === "live" &&
@@ -107,7 +69,15 @@ export class GroupManager {
         "BRAND_NOT_ALLOWED",
         "This Brand is not the configured approved test Brand.",
       );
-    const input = validateInput(raw);
+    const input = {
+      name: `Auto Group ${randomUUID().slice(0, 12)}`,
+      countryCode: "US",
+      timeZoneName: "Asia/Dubai",
+      startDayOfWeek: "SAT",
+      openTime: 28800,
+      closeTime: 72000,
+      closeTimeExtension: 3600,
+    };
     for (const [id, plan] of this.plans)
       if (plan.expiresAt < this.now() && plan.state !== "running")
         this.plans.delete(id);

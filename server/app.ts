@@ -1,9 +1,10 @@
 import express from "express";
 import { validateBrandId } from "./brand.ts";
 import type { GroupManager } from "./groups.ts";
-import { ApiError, type CatalogClient } from "./catalog.ts";
+import { ApiError } from "./errors.ts";
+import type { BrandClient } from "./brand-client.ts";
 export function createApp(
-  client: Pick<CatalogClient, "mode" | "load" | "loadBrand">,
+  client: Pick<BrandClient, "mode" | "loadBrand">,
   groups?: GroupManager,
 ) {
   const app = express();
@@ -37,17 +38,15 @@ export function createApp(
       groups &&
       ["/api/groups/preview", "/api/groups/execute"].includes(req.path);
     if (isGroupAction && !req.headers.origin)
-      return res
-        .status(403)
-        .json({
-          code: "ORIGIN_REQUIRED",
-          error: "An approved local Origin is required.",
-        });
+      return res.status(403).json({
+        code: "ORIGIN_REQUIRED",
+        error: "An approved local Origin is required.",
+      });
     if (!["GET", "HEAD"].includes(req.method) && !isGroupAction) {
       res.setHeader("Allow", "GET, HEAD");
       return res.status(405).json({
         code: "READ_ONLY",
-        error: "This application only supports read-only requests.",
+        error: "This request method is not supported for this endpoint.",
       });
     }
     next();
@@ -56,27 +55,18 @@ export function createApp(
     res.json({
       mode: client.mode,
       readOnly: !(groups && groups.mode === "live" && groups.available),
-      scope: "global",
-      capabilities: {
-        brandLookup: true,
-        assignedServices: false,
-        groupCreation: !!groups?.available,
-      },
+      capabilities: { brandLookup: true, groupCreation: !!groups?.available },
     }),
   );
   app.head("/api/brand", (_req, res) => res.status(200).end());
   app.get("/api/brand", async (req, res) =>
     res.json(await client.loadBrand(validateBrandId(req.query.brandId))),
   );
-  // Metadata only: HEAD and unknown API routes must not trigger a live catalog request.
-  app.head("/api/services", (_req, res) => res.status(200).end());
-  app.get("/api/services", async (_req, res) => res.json(await client.load()));
   if (groups) {
     app.post(
       "/api/groups/preview",
       express.json({ limit: "16kb", strict: true }),
-      (req, res) =>
-        res.json(groups.preview(req.body?.brandId, req.body?.input)),
+      (req, res) => res.json(groups.preview(req.body?.brandId)),
     );
     app.post(
       "/api/groups/execute",
@@ -92,9 +82,7 @@ export function createApp(
     );
   }
   app.use("/api", (_req, res) =>
-    res
-      .status(404)
-      .json({ code: "NOT_FOUND", error: "Unknown read-only endpoint." }),
+    res.status(404).json({ code: "NOT_FOUND", error: "Unknown endpoint." }),
   );
   app.use(express.static("dist"));
   app.use(
@@ -109,7 +97,7 @@ export function createApp(
         error:
           error instanceof ApiError
             ? error.message
-            : "The catalog request could not be processed.",
+            : "The request could not be processed.",
       });
     },
   );

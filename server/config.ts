@@ -1,4 +1,4 @@
-import type { OperatingMode } from "../shared/catalog.ts";
+import type { OperatingMode } from "../shared/brand.ts";
 export interface Config {
   mode: OperatingMode;
   approved: boolean;

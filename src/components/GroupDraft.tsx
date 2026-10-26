@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { RequestError, postJson } from "../api.ts";
 import type { OperatingMode } from "../../shared/brand.ts";
 import type { buildObservedPayload } from "../../shared/group.ts";
+type Payload = ReturnType<typeof buildObservedPayload>;
 type Preview = {
   id: string;
   brandId: string;
   mode: OperatingMode;
-  payload: ReturnType<typeof buildObservedPayload>;
+  payload: Payload;
   expiresAt: number;
 };
 type Report = {
@@ -17,6 +18,40 @@ type Report = {
   message: string;
   verification: "mock_only" | "not_supported";
 };
+function parseDraft(text: string): Payload | null {
+  try {
+    const value = JSON.parse(text);
+    return value &&
+      typeof value === "object" &&
+      typeof value.name === "string" &&
+      Array.isArray(value.brands) &&
+      value.settings &&
+      typeof value.settings === "object" &&
+      value.settings.business_day &&
+      typeof value.settings.business_day === "object"
+      ? (value as Payload)
+      : null;
+  } catch {
+    return null;
+  }
+}
+function timeText(value: unknown): string {
+  if (
+    typeof value !== "number" ||
+    !Number.isInteger(value) ||
+    value < 0 ||
+    value >= 86400
+  )
+    return "";
+  const h = Math.floor(value / 3600),
+    m = Math.floor((value % 3600) / 60),
+    s = value % 60;
+  return [h, m, s].map((v) => String(v).padStart(2, "0")).join(":");
+}
+function timeSeconds(text: string): number {
+  const parts = text.split(":").map(Number);
+  return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+}
 export function GroupDraft({
   brandId,
   mode,
@@ -27,6 +62,7 @@ export function GroupDraft({
   creationAvailable: boolean;
 }) {
   const [plan, setPlan] = useState<Preview | null>(null),
+    [draftText, setDraftText] = useState(""),
     [report, setReport] = useState<Report | null>(null),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(true),
@@ -34,9 +70,11 @@ export function GroupDraft({
     [attempted, setAttempted] = useState(false),
     [retryVerified, setRetryVerified] = useState(false),
     [generation, setGeneration] = useState(0);
+  const draft = parseDraft(draftText);
   useEffect(() => {
     let current = true;
     setPlan(null);
+    setDraftText("");
     setReport(null);
     setError("");
     setLoading(true);
@@ -44,7 +82,10 @@ export function GroupDraft({
     setRetryVerified(false);
     postJson<Preview>("/api/groups/preview", { brandId: String(brandId) })
       .then((result) => {
-        if (current) setPlan(result);
+        if (current) {
+          setPlan(result);
+          setDraftText(JSON.stringify(result.payload, null, 2));
+        }
       })
       .catch((e) => {
         if (current)
@@ -59,21 +100,36 @@ export function GroupDraft({
       current = false;
     };
   }, [brandId, generation]);
+  function patchDraft(mutator: (data: Payload) => void) {
+    if (!draft) return;
+    const next = structuredClone(draft);
+    mutator(next);
+    setDraftText(JSON.stringify(next, null, 2));
+    setError("");
+  }
   async function create() {
-    if (!plan || busy || attempted || !creationAvailable) return;
-    if (Date.now() > plan.expiresAt) {
+    if (!plan || busy || attempted || !creationAvailable || !draft) return;
+    setBusy(true);
+    setError("");
+    let confirmed: Preview;
+    try {
+      confirmed = await postJson<Preview>("/api/groups/preview", {
+        brandId: String(brandId),
+        payload: draft,
+      });
+      setPlan(confirmed);
+    } catch (e) {
       setError(
-        "The generated Group expired. Generate new data before exporting.",
+        e instanceof Error ? e.message : "Could not validate Group data.",
       );
+      setBusy(false);
       return;
     }
     setAttempted(true);
-    setBusy(true);
-    setError("");
     try {
       setReport(
         await postJson<Report>("/api/groups/execute", {
-          previewId: plan.id,
+          previewId: confirmed.id,
           confirmation: String(brandId),
           acknowledgeNoLocations: true,
         }),
@@ -120,7 +176,7 @@ export function GroupDraft({
         <div>
           <div className="eyebrow">02 · GROUP SETTINGS</div>
           <h2 id="group-title">Your Group is ready</h2>
-          <p>Data is generated automatically from the provided example.</p>
+          <p>Data is generated automatically. Edit it before exporting.</p>
         </div>
         <span className="step-icon">✦</span>
       </div>
@@ -138,43 +194,164 @@ export function GroupDraft({
       ) : (
         plan && (
           <>
-            <div className="group-data">
-              <div>
-                <span>GROUP NAME</span>
-                <strong>{plan.payload.name}</strong>
+            {draft ? (
+              <fieldset disabled={busy || attempted} className="group-fields">
+                <div className="group-data editable">
+                  <label>
+                    GROUP NAME
+                    <input
+                      aria-label="Group name"
+                      value={draft.name}
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.name = e.target.value;
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    COUNTRY CODE
+                    <input
+                      aria-label="Country code"
+                      value={
+                        typeof draft.settings.country_code === "string"
+                          ? draft.settings.country_code
+                          : ""
+                      }
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.country_code =
+                            e.target.value.toUpperCase();
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    TIME ZONE
+                    <input
+                      aria-label="Time zone"
+                      value={
+                        typeof draft.settings.time_zone_name === "string"
+                          ? draft.settings.time_zone_name
+                          : ""
+                      }
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.time_zone_name = e.target.value;
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    START DAY
+                    <select
+                      aria-label="Start day"
+                      value={draft.settings.start_day_of_week}
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.start_day_of_week = e.target.value;
+                        })
+                      }
+                    >
+                      {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
+                        (day) => (
+                          <option key={day}>{day}</option>
+                        ),
+                      )}
+                    </select>
+                  </label>
+                  <label>
+                    OPEN TIME
+                    <input
+                      aria-label="Open time"
+                      type="time"
+                      step="1"
+                      value={timeText(draft.settings.business_day.open_time)}
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.business_day.open_time = timeSeconds(
+                            e.target.value,
+                          );
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    CLOSE TIME
+                    <input
+                      aria-label="Close time"
+                      type="time"
+                      step="1"
+                      value={timeText(draft.settings.business_day.close_time)}
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.business_day.close_time = timeSeconds(
+                            e.target.value,
+                          );
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    HOURS EXTENSION
+                    <input
+                      aria-label="Hours extension"
+                      type="number"
+                      min="0"
+                      max="24"
+                      step="0.25"
+                      value={
+                        Number.isFinite(
+                          draft.settings.business_day.close_time_extension,
+                        )
+                          ? draft.settings.business_day.close_time_extension /
+                            3600
+                          : ""
+                      }
+                      onChange={(e) =>
+                        patchDraft((d) => {
+                          d.settings.business_day.close_time_extension =
+                            Number(e.target.value) * 3600;
+                        })
+                      }
+                    />
+                  </label>
+                </div>
+              </fieldset>
+            ) : (
+              <div className="alert" role="alert">
+                JSON is invalid or missing required sections. Fix it below
+                before exporting.
               </div>
-              <div>
-                <span>COUNTRY</span>
-                <strong>{plan.payload.settings.country_code}</strong>
-              </div>
-              <div>
-                <span>TIME ZONE</span>
-                <strong>{plan.payload.settings.time_zone_name}</strong>
-              </div>
-              <div>
-                <span>START DAY</span>
-                <strong>{plan.payload.settings.start_day_of_week}</strong>
-              </div>
-              <div>
-                <span>HOURS</span>
-                <strong>08:00–20:00</strong>
-              </div>
-              <div>
-                <span>LOCATIONS</span>
-                <strong>None selected</strong>
-              </div>
-            </div>
+            )}
             <div className="notice">
-              <strong>Example settings</strong>
+              <strong>Locations are not available yet</strong>
               <p>
-                US · Asia/Dubai · Saturday · 08:00–20:00 · 1-hour extension.
-                Auto Assign, breaks and payment settings use the supplied
-                example. No locations will be assigned.
+                The Group details response shows existing assignments; the
+                Location list and the creation format are not confirmed. No
+                locations will be assigned.
               </p>
             </div>
             <details className="payload-details">
-              <summary>View complete generated data</summary>
-              <pre>{JSON.stringify(plan.payload, null, 2)}</pre>
+              <summary>Edit all generated data (JSON)</summary>
+              <p>
+                Other settings can be edited here. Keep the captured field
+                structure and leave brands empty until Location selection is
+                supported.
+              </p>
+              <label className="json-label" htmlFor="group-json">
+                Generated Group payload
+              </label>
+              <textarea
+                id="group-json"
+                spellCheck={false}
+                disabled={busy || attempted}
+                value={draftText}
+                onChange={(e) => {
+                  setDraftText(e.target.value);
+                  setError("");
+                }}
+              />
             </details>
             {!creationAvailable && mode === "live" && (
               <p className="setup-note">
@@ -230,7 +407,7 @@ export function GroupDraft({
                 <button
                   className="export-button"
                   type="button"
-                  disabled={!creationAvailable || busy}
+                  disabled={!draft || !creationAvailable || busy}
                   onClick={() => void create()}
                 >
                   {busy

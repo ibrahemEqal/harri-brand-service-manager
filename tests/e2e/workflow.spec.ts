@@ -16,7 +16,9 @@ test("auto generate and simulate one-click export without Harri requests", async
   await page.getByLabel("Brand ID").fill("18619889");
   await page.getByRole("button", { name: "Load Brand" }).click();
   await expect(page.getByRole("heading", { name: "sds" })).toBeVisible();
-  await expect(page.getByText(/^Auto Group /)).toBeVisible();
+  await expect(page.getByLabel("Group name")).toHaveValue(/^Auto Group /);
+  await page.getByLabel("Group name").fill("Edited Mock Group");
+  await page.getByLabel("Country code").fill("ES");
   await expect(
     page.getByRole("button", { name: "Simulate Export" }),
   ).toBeVisible();

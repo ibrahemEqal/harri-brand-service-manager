@@ -1,6 +1,6 @@
 # Harri Group Creator
 
-Local QA tool for an existing approved SSO test Brand. Enter the Brand ID, view automatically generated Group data, and click **Export to Harri** to submit the Group once. There is no Service catalog or Service activation flow.
+Local QA tool for an existing approved SSO test Brand. Enter the Brand ID, edit the automatically generated Group data, and click **Export to Harri** to submit the Group once. There is no Service catalog or Service activation flow.
 
 ## Setup
 
@@ -10,9 +10,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. Mock Mode is the default. Enter mock Brand ID `18619889`, then **Simulate Export**; it does not contact Harri. The Group name is automatically generated with a UUID fragment. The example values supplied for this specific test are filled server-side: US, Asia/Dubai, SAT, 08:00–20:00, one-hour extension, and the supplied Auto Assign, break, overtime and payment settings. This is one captured example, not a general Group schema. Review “View complete generated data” to see every field.
+Open `http://127.0.0.1:5173`. Mock Mode is the default. Enter mock Brand ID `18619889`, then **Simulate Export**; it does not contact Harri. The Group name is automatically generated with a UUID fragment. The example values supplied for this specific test are filled server-side: US, Asia/Dubai, SAT, 08:00–20:00, one-hour extension, and the supplied Auto Assign, break, overtime and payment settings. This is one captured example, not a general Group schema. Edit the main fields directly or expand “Edit all generated data (JSON)” for other fields; the server validates the observed structure before creating a new preview.
 
-**No locations are selected**: `brands: []` is sent because the provided request contained no selected locations. This does not mean the Group is associated with all locations. Selecting locations is not supported because its request format was not provided.
+**No locations are selected**: `brands: []` is sent because the provided request contained no selected locations. This does not mean the Group is associated with all locations. Selecting locations is not supported because its request format was not provided. The supplied `GET /settings/groups/7869` response represents assignments on one existing Group; it does not establish the complete Location tree or the creation payload for selected locations. Non-empty `brands` is blocked until the contract is confirmed.
 
 ## Live test setup
 

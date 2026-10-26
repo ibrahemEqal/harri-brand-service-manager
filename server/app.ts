@@ -66,7 +66,8 @@ export function createApp(
     app.post(
       "/api/groups/preview",
       express.json({ limit: "16kb", strict: true }),
-      (req, res) => res.json(groups.preview(req.body?.brandId)),
+      (req, res) =>
+        res.json(groups.preview(req.body?.brandId, req.body?.payload)),
     );
     app.post(
       "/api/groups/execute",

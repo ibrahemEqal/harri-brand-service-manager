@@ -38,6 +38,107 @@ type Plan = {
   state: "pending" | "running" | "done";
   report?: GroupReport;
 };
+type Payload = ReturnType<typeof buildObservedPayload>;
+
+/** Check the provided fields against the observed request shape; this is not a Harri business schema. */
+function validateEditedPayload(value: unknown): Payload {
+  const template = buildObservedPayload({
+    name: "Example",
+    countryCode: "US",
+    timeZoneName: "Asia/Dubai",
+    startDayOfWeek: "SAT",
+    openTime: 28800,
+    closeTime: 72000,
+    closeTimeExtension: 3600,
+  });
+  function invalid(path: string): never {
+    throw new ApiError(
+      400,
+      "INVALID_GROUP_DATA",
+      `Invalid Group data at ${path}.`,
+    );
+  }
+  function validate(
+    actual: unknown,
+    expected: unknown,
+    path: string,
+    depth: number,
+  ): void {
+    if (depth > 10) invalid(path);
+    if (Array.isArray(expected)) {
+      if (!Array.isArray(actual) || actual.length > 50) invalid(path);
+      if (path === "brands") {
+        if (actual.length)
+          throw new ApiError(
+            400,
+            "LOCATIONS_UNAVAILABLE",
+            "The creation format for selected locations is not confirmed yet.",
+          );
+        return;
+      }
+      if (!expected.length) {
+        if (actual.length) invalid(path);
+        return;
+      }
+      actual.forEach((item, index) =>
+        validate(item, expected[0], `${path}[${index}]`, depth + 1),
+      );
+      return;
+    }
+    if (expected && typeof expected === "object") {
+      if (!actual || typeof actual !== "object" || Array.isArray(actual))
+        invalid(path);
+      const e = expected as Record<string, unknown>,
+        a = actual as Record<string, unknown>;
+      if (
+        Object.keys(a).length !== Object.keys(e).length ||
+        Object.keys(e).some((key) => !Object.hasOwn(a, key))
+      )
+        invalid(path);
+      for (const key of Object.keys(e))
+        validate(a[key], e[key], path ? `${path}.${key}` : key, depth + 1);
+      return;
+    }
+    if (path.endsWith(".value") || expected === null) {
+      if (
+        actual !== null &&
+        typeof actual !== "string" &&
+        typeof actual !== "number" &&
+        typeof actual !== "boolean"
+      )
+        invalid(path);
+    } else if (typeof actual !== typeof expected) invalid(path);
+    if (typeof actual === "string" && actual.length > 256) invalid(path);
+    if (
+      typeof actual === "number" &&
+      (!Number.isFinite(actual) || Math.abs(actual) > 10000000)
+    )
+      invalid(path);
+  }
+  validate(value, template, "", 0);
+  const payload = value as Payload;
+  if (!payload.name.trim() || payload.name.trim().length > 120) invalid("name");
+  const settings = payload.settings;
+  if (!/^[A-Z]{2}$/.test(settings.country_code))
+    invalid("settings.country_code");
+  if (!settings.time_zone_name.trim()) invalid("settings.time_zone_name");
+  if (
+    !["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].includes(
+      settings.start_day_of_week,
+    )
+  )
+    invalid("settings.start_day_of_week");
+  for (const [key, seconds] of Object.entries(settings.business_day)) {
+    if (
+      !Number.isSafeInteger(seconds) ||
+      seconds < 0 ||
+      seconds > (key === "close_time_extension" ? 86400 : 86399)
+    )
+      invalid(`settings.business_day.${key}`);
+  }
+  // Detach the plan from the caller; later edits cannot change an approved preview.
+  return structuredClone({ ...payload, name: payload.name.trim() });
+}
 export class GroupManager {
   private plans = new Map<string, Plan>();
   private attemptedNames = new Map<string, "running" | "settled">();
@@ -57,7 +158,7 @@ export class GroupManager {
         !!this.config.groupAllowedBrandId)
     );
   }
-  preview(brand: unknown) {
+  preview(brand: unknown, edited?: unknown) {
     const brandId = validateBrandId(brand);
     if (
       this.mode === "live" &&
@@ -90,7 +191,10 @@ export class GroupManager {
     const plan: Plan = {
       id: randomUUID(),
       brandId,
-      payload: buildObservedPayload(input),
+      payload:
+        edited === undefined
+          ? buildObservedPayload(input)
+          : validateEditedPayload(edited),
       expiresAt: this.now() + 5 * 60 * 1000,
       state: "pending",
     };

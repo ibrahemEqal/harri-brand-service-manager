@@ -250,3 +250,63 @@ test("local Group endpoints enforce Origin and reject all other write routes", a
     );
   }
 });
+
+test("edited fields are bound to the preview and the confirmed POST uses exactly that snapshot", async () => {
+  let sent: any;
+  const manager = new GroupManager(makeLive(), async () => ({
+    post: async (_url, options) => {
+      sent = options.data;
+      return {
+        ok: () => true,
+        status: () => 200,
+        json: async () => ({
+          data: "Success",
+          status: "SUCCESS",
+          status_code: 200,
+        }),
+      };
+    },
+    dispose: async () => {},
+  }));
+  const initial = manager.preview("18606124");
+  const edited: any = structuredClone(initial.payload);
+  edited.name = "Edited QA Group";
+  edited.settings.country_code = "ES";
+  edited.settings.time_zone_name = "Europe/Madrid";
+  edited.settings.business_day.open_time = 32400;
+  edited.settings.auto_assign[0].value = false;
+  const plan = manager.preview("18606124", edited);
+  edited.name = "Changed after preview";
+  edited.settings.auto_assign[0].value = true;
+  const report = await manager.execute(plan.id, "18606124", true);
+  assert.equal(report.status, "acknowledged");
+  assert.equal(sent.name, "Edited QA Group");
+  assert.equal(sent.settings.country_code, "ES");
+  assert.equal(sent.settings.business_day.open_time, 32400);
+  assert.equal(sent.settings.auto_assign[0].value, false);
+  assert.deepEqual(sent.brands, []);
+});
+test("invalid edited data and unconfirmed non-empty locations cannot trigger a Harri request", async () => {
+  let calls = 0;
+  const manager = new GroupManager(makeLive(), async () => {
+    calls++;
+    throw new Error("unexpected");
+  });
+  const original = manager.preview("18606124").payload;
+  const withLocations: any = structuredClone(original);
+  withLocations.brands = [{ id: 123 }];
+  assert.throws(
+    () => manager.preview("18606124", withLocations),
+    (e: any) => e.code === "LOCATIONS_UNAVAILABLE",
+  );
+  const missing: any = structuredClone(original);
+  delete missing.settings.business_day.open_time;
+  assert.throws(() => manager.preview("18606124", missing));
+  const extra: any = structuredClone(original);
+  extra.settings.unconfirmed = true;
+  assert.throws(() => manager.preview("18606124", extra));
+  const invalidTime: any = structuredClone(original);
+  invalidTime.settings.business_day.open_time = 90000;
+  assert.throws(() => manager.preview("18606124", invalidTime));
+  assert.equal(calls, 0);
+});

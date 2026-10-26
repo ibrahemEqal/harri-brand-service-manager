@@ -1,6 +1,6 @@
 # Harri Brand Service Manager v0.1
 
-A local, **strictly read-only** Harri BAM QA dashboard. React, TypeScript, Vite, Tailwind CSS, Node.js/Express and Playwright APIRequestContext.
+A local Harri BAM QA dashboard with read access and separately gated test Group creation. React, TypeScript, Vite, Tailwind CSS, Node.js/Express and Playwright APIRequestContext.
 
 Enter a Brand ID to load that Brand's details and the complete global service catalog through the backend. Services stay collapsed in a searchable dropdown. Open it to search names/codes/descriptions, filter platform and mode, sort alphabetically and inspect nested dependency/exclusion/group details. Keyboard users can use the search field with Arrow keys, Enter and Escape. Main text and inputs use a larger readable type scale.
 
@@ -58,11 +58,11 @@ PORT=3001
 
 `Authorization` is an example header name. Configure the actual header name and **complete value** used by your approved Harri session; the tool does not assume or prefix Bearer. For cookie-only authentication, set `HARRI_AUTH_HEADER_NAME=Cookie` and place the full approved cookie value in `HARRI_AUTH_HEADER_VALUE`; leave `HARRI_COOKIE` empty. Optional `HARRI_COOKIE` is for combining a named authentication header with a session cookie when confirmed necessary. Restart the backend after changes. Never send credentials into React, paste them into screenshots, use `VITE_` variables for secrets or commit them. `.env` and variants are gitignored.
 
-Only clicking **Load Services** initiates the two Harri GET requests in Live Mode. The status endpoint does not contact Harri. Requests use Playwright APIRequestContext, a 15-second timeout, normal TLS certificate checks, zero redirects, no automatic retries and disposed request contexts. The Brand ID is validated before interpolation; users cannot submit arbitrary upstream URLs or payloads.
+Clicking **Load Services** initiates the two Harri GET requests in Live Mode. A Group POST can be initiated only by explicitly enabling Group creation and confirming a preview as documented below. The status endpoint does not contact Harri. Requests use Playwright APIRequestContext, a 15-second timeout, normal TLS certificate checks, zero redirects, no automatic retries and disposed request contexts. The Brand ID is validated before interpolation; users cannot submit arbitrary upstream URLs or payloads.
 
 Errors distinguish invalid IDs (400), rejected authentication (401), access denied (403), Brand not found/not visible (404), invalid responses (502), and connectivity/timeouts (502). Redirect responses are reported separately as UPSTREAM_REDIRECT with their exact HTTP status; redirects are never followed. HTTP 401 is reported separately as rejected authentication. For a catalog-only HTTP 404, the backend returns the full provided snapshot with source `attached-fixture-fallback` and an explicit warning. Brand data never falls back to a different source, and authentication/permission failures do not trigger catalog fallback. Independent Brand/catalog results remain separately labeled when one request fails.
 
-## Read-only boundaries
+## Local routes and boundaries
 
 Application-owned endpoints (not additional Harri endpoints):
 
@@ -70,7 +70,7 @@ Application-owned endpoints (not additional Harri endpoints):
 - `GET /api/brand?brandId=...`: Brand lookup using the confirmed path above.
 - `GET /api/services`: complete global catalog.
 
-All mutation methods are rejected with 405 before routing, including the previous `/api/preview` and `/api/execute` paths. There are no activation, create-Brand, edit, delete or authentication-write routes. Local HEAD requests provide metadata without performing Harri requests. Backend outbound transport only exposes GET. No sensitive headers or raw upstream responses are logged or returned in errors. Loopback binding, Host/Origin validation and same-origin access limit this local tool. Responses use `Cache-Control: no-store`.
+POST is restricted to `/api/groups/preview` and `/api/groups/execute`; other write routes return 405. Group routes require an approved local Origin. There are no service activation, create-Brand, edit, or delete routes. Local HEAD requests provide metadata without performing Harri requests. The Group POST is separately gated and disabled by default. No sensitive headers or raw upstream responses are logged or returned in errors. Loopback binding, Host/Origin validation and same-origin access limit this local tool. Responses use `Cache-Control: no-store`.
 
 ## Verify
 
@@ -86,9 +86,9 @@ Unit and backend tests cover full fixture preservation, malformed responses, nul
 ## Project structure
 
 - `src/components/`: reusable searchable service picker, Brand overview and accessible native-dialog details drawer.
-- `src/api.ts`: frontend GET client and safe error handling.
+- `src/api.ts`: frontend HTTP client and safe error handling.
 - `shared/`: TypeScript contracts, runtime response validation and search/filter functions.
-- `server/`: configuration, read-only Playwright adapter and local Express routes.
+- `server/`: configuration, Playwright API adapters and local Express routes.
 - `fixtures/`: supplied service response and sanitized Brand snapshot.
 - `tests/`: parser/filter, transport, HTTP and browser tests.
 
@@ -109,3 +109,22 @@ If authentication fails, the UI now distinguishes `HTTP 401`, `HTTP 403`, and re
 The searchable dropdown supports multiple selections and shows all catalog entries. Selected services appear in a summary with Details and Remove actions. The `إضافة الخدمات (Preview)` button is enabled only with a loaded Brand and at least one selection. Clicking it displays a local preview and explicitly states that nothing was sent to Harri. It does not call an activation API, simulate a success, or change any Brand.
 
 A catalog HTTP 404 no longer hides the service selector: the backend loads the complete supplied 166-service fixture, labeled as a snapshot fallback. This keeps selection usable without asserting that the live catalog request succeeded. The underlying live 404 still requires investigation; no alternative endpoint is invented.
+
+## Group Management: confirmed example and limits
+
+The user supplied `POST https://gateway.harriprep.com/scheduling/api/v1/admin/brands/{brandId}/settings/groups` with an example Group payload and `{"data":"Success","status":"SUCCESS","status_code":200}` response. Only the name, country code, time zone, weekday and business hours are configurable in the UI; the remaining fields use the observed example, including the SALARIED / HOURLY / NONE payment entry given in the earlier example. The last pasted message was truncated in that entry; review the complete preview against an actual sanitized request before any real execution. This is not a generic group-settings schema.
+
+The user stated `brands: []` occurred because no locations were selected. This version supports **no location selection** and always sends `brands: []`; it does not claim that any Location is attached. The checkbox explicitly confirms this. SSO status cannot be verified from any confirmed API in this project; the operator must verify the Brand manually.
+
+In Mock Mode, load mock Brand 18619889, enter a Group name and preview; the final button only simulates a result. No real request is made.
+
+For a real Group request, after explicit approval, locally configure BOTH the existing live read settings AND these settings, then restart the backend:
+
+```dotenv
+HARRI_ALLOW_GROUP_CREATION=true
+HARRI_GROUP_ALLOWED_BRAND_ID=18606124
+```
+
+The allowed ID must be the approved SSO test Brand. The server does not infer or verify SSO. Review every field in the generated payload, type the matching Brand ID, explicitly acknowledge zero locations and click Create Group. The sample defaults can have business impact; they are not universal defaults.
+
+A response matching the supplied success example is labeled **acknowledged**, not independently verified: the provided response contains no Group ID and no read-back contract was confirmed. Check Group Management manually. If there is a timeout, unexpected response or uncertain result, inspect the existing Groups before retrying. The tool makes no automatic retries. A preview is processed at most once in the same running process, and concurrent or repeated live attempts with the same Brand/name are blocked unless explicitly rejected by Harri. These protections are in memory and do not survive server restarts or cover other clients.

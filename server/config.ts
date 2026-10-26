@@ -4,6 +4,8 @@ export interface Config {
   approved: boolean;
   headers: Record<string, string>;
   port: number;
+  groupWritesEnabled: boolean;
+  groupAllowedBrandId: string | null;
 }
 export function readConfig(env: NodeJS.ProcessEnv): Config {
   const mode = env.HARRI_MODE ?? "mock";
@@ -44,5 +46,23 @@ export function readConfig(env: NodeJS.ProcessEnv): Config {
   const port = Number(env.PORT ?? 3001);
   if (!Number.isInteger(port) || port < 1 || port > 65535)
     throw new Error("PORT must be between 1 and 65535.");
-  return { mode, approved, headers, port };
+  const groupWritesEnabled = env.HARRI_ALLOW_GROUP_CREATION === "true";
+  const groupAllowedBrandId = env.HARRI_GROUP_ALLOWED_BRAND_ID || null;
+  if (
+    groupWritesEnabled &&
+    (!groupAllowedBrandId ||
+      !/^[1-9]\d{0,15}$/.test(groupAllowedBrandId) ||
+      !Number.isSafeInteger(Number(groupAllowedBrandId)))
+  )
+    throw new Error(
+      "A valid HARRI_GROUP_ALLOWED_BRAND_ID is required when group creation is enabled.",
+    );
+  return {
+    mode,
+    approved,
+    headers,
+    port,
+    groupWritesEnabled,
+    groupAllowedBrandId,
+  };
 }

@@ -21,6 +21,8 @@ export function loadRuntimeConfig(
     "HARRI_AUTH_HEADER_NAME",
     "HARRI_AUTH_HEADER_VALUE",
     "HARRI_COOKIE",
+    "HARRI_ALLOW_GROUP_CREATION",
+    "HARRI_GROUP_ALLOWED_BRAND_ID",
     "PORT",
   ]);
   const settings = Object.fromEntries(

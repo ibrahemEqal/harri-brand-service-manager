@@ -1,4 +1,4 @@
-# Validation — read-only Brand/catalog MVP
+# Validation — Brand/catalog and Group MVP
 
 - Dependencies installed with `npm ci`.
 - `npm run build`: passed, TypeScript and Vite production build.
@@ -11,7 +11,7 @@
 
 The confirmed Brand GET path and both supplied Brand response wrappers are implemented. The returned Brand ID must match the requested ID. Live operation requires explicit approval, local server credentials and a successful live test before being called verified. Mock results are labeled snapshots and only ID 18619889 is available in the Brand fixture.
 
-The service catalog is global, not a Brand's assignments. Assigned-service activation status remains unavailable because its read endpoint/response have not been confirmed. No activation or other write flow is present in this version.
+The service catalog is global, not a Brand's assignments. Assigned-service activation status remains unavailable because its read endpoint/response have not been confirmed. No service-activation write flow is present. Group creation is separately gated; see below.
 
 ## Authentication diagnostics update
 
@@ -24,3 +24,7 @@ Increased the UI type scale (main text/inputs 16px, small metadata 14px+) and st
 ## Catalog 404 and local Add preview
 
 Added a tested catalog-only HTTP 404 fallback to the full provided snapshot, with explicit source/warning. Live Brand errors and authentication errors are not masked. Added multi-selection, a selected-service summary and a local-only Add preview button. Browser specs now cover selection and verify only GET traffic, but cannot be executed here due to the previously documented missing Chromium. Production build and 30 Node/backend tests pass. No real Harri activation or write request was made.
+
+## Group Management update
+
+The current build and 37 Node/backend tests passed. Tests use mocked transports and a loopback backend, including preview confirmation, empty locations, request shape, allowed Brand, blocked real execution, uncertain outcomes and concurrent attempts. No real Group was created or authenticated Harri request sent by the developer. Browser execution remains unverified in this environment. SSO is a manual prerequisite and no Location selection is implemented.

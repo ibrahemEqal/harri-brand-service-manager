@@ -1,8 +1,10 @@
 import express from "express";
 import { validateBrandId } from "./brand.ts";
+import type { GroupManager } from "./groups.ts";
 import { ApiError, type CatalogClient } from "./catalog.ts";
 export function createApp(
   client: Pick<CatalogClient, "mode" | "load" | "loadBrand">,
+  groups?: GroupManager,
 ) {
   const app = express();
   app.disable("x-powered-by");
@@ -30,23 +32,36 @@ export function createApp(
       return res
         .status(403)
         .json({ code: "ORIGIN_REJECTED", error: "Origin rejected." });
-    if (!["GET", "HEAD"].includes(req.method)) {
-      res.setHeader("Allow", "GET, HEAD");
+    const isGroupAction =
+      req.method === "POST" &&
+      groups &&
+      ["/api/groups/preview", "/api/groups/execute"].includes(req.path);
+    if (isGroupAction && !req.headers.origin)
       return res
-        .status(405)
+        .status(403)
         .json({
-          code: "READ_ONLY",
-          error: "This application only supports read-only requests.",
+          code: "ORIGIN_REQUIRED",
+          error: "An approved local Origin is required.",
         });
+    if (!["GET", "HEAD"].includes(req.method) && !isGroupAction) {
+      res.setHeader("Allow", "GET, HEAD");
+      return res.status(405).json({
+        code: "READ_ONLY",
+        error: "This application only supports read-only requests.",
+      });
     }
     next();
   });
   app.get("/api/status", (_req, res) =>
     res.json({
       mode: client.mode,
-      readOnly: true,
+      readOnly: !(groups && groups.mode === "live" && groups.available),
       scope: "global",
-      capabilities: { brandLookup: true, assignedServices: false },
+      capabilities: {
+        brandLookup: true,
+        assignedServices: false,
+        groupCreation: !!groups?.available,
+      },
     }),
   );
   app.head("/api/brand", (_req, res) => res.status(200).end());
@@ -56,6 +71,26 @@ export function createApp(
   // Metadata only: HEAD and unknown API routes must not trigger a live catalog request.
   app.head("/api/services", (_req, res) => res.status(200).end());
   app.get("/api/services", async (_req, res) => res.json(await client.load()));
+  if (groups) {
+    app.post(
+      "/api/groups/preview",
+      express.json({ limit: "16kb", strict: true }),
+      (req, res) =>
+        res.json(groups.preview(req.body?.brandId, req.body?.input)),
+    );
+    app.post(
+      "/api/groups/execute",
+      express.json({ limit: "16kb", strict: true }),
+      async (req, res) =>
+        res.json(
+          await groups.execute(
+            req.body?.previewId,
+            req.body?.confirmation,
+            req.body?.acknowledgeNoLocations,
+          ),
+        ),
+    );
+  }
   app.use("/api", (_req, res) =>
     res
       .status(404)
@@ -69,15 +104,13 @@ export function createApp(
       res: express.Response,
       _next: express.NextFunction,
     ) => {
-      res
-        .status(error instanceof ApiError ? error.status : 500)
-        .json({
-          code: error instanceof ApiError ? error.code : "INTERNAL_ERROR",
-          error:
-            error instanceof ApiError
-              ? error.message
-              : "The catalog request could not be processed.",
-        });
+      res.status(error instanceof ApiError ? error.status : 500).json({
+        code: error instanceof ApiError ? error.code : "INTERNAL_ERROR",
+        error:
+          error instanceof ApiError
+            ? error.message
+            : "The catalog request could not be processed.",
+      });
     },
   );
   return app;

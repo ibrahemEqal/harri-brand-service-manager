@@ -1558,6 +1558,41 @@ button {
   outline: 2px solid #6aa798;
   outline-offset: -2px;
 }
+
+.group-draft {
+  margin-top: 18px;
+  padding: 24px;
+}
+.group-draft > p,
+.group-draft form > p {
+  margin: 12px 0 18px;
+  font-size: 15px;
+}
+.group-draft-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.group-draft-fields label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.group-draft-fields input {
+  width: 100%;
+  font-size: 16px;
+}
+.local-add-preview pre {
+  overflow-x: auto;
+  font-size: 14px;
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .group-draft-fields {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 760px) {
   .selection-summary {
     padding: 18px;
@@ -1568,4 +1603,41 @@ button {
   .selection-add-row button {
     width: 100%;
   }
+}
+.group-draft-fields select {
+  width: 100%;
+  font-size: 16px;
+}
+.group-confirm {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 20px 0 12px;
+}
+.group-confirm input {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 8px;
+}
+.group-ack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  margin: 14px 0;
+}
+.group-ack input {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+}
+.group-report {
+  border-top: 1px solid #b9d9cc;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+.group-report p {
+  font-size: 15px;
+  margin-top: 8px;
 }

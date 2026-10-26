@@ -8,12 +8,14 @@ import {
 } from "../shared/catalog.ts";
 import type { BrandResponse } from "../shared/brand.ts";
 import { BrandOverview } from "./components/BrandOverview.tsx";
+import { GroupDraft } from "./components/GroupDraft.tsx";
 import { ServicePicker } from "./components/ServicePicker.tsx";
 import { ServiceDetails } from "./components/ServiceDetails.tsx";
 import { getJson, RequestError } from "./api.ts";
 import "./style.css";
 function App() {
   const [mode, setMode] = useState<OperatingMode | null>(null);
+  const [groupCreationAvailable, setGroupCreationAvailable] = useState(false);
   const [brandId, setBrandId] = useState("");
   const [submittedId, setSubmittedId] = useState("");
   const [brandError, setBrandError] = useState("");
@@ -27,8 +29,14 @@ function App() {
   const controller = useRef<AbortController | null>(null);
   useEffect(() => {
     const statusController = new AbortController();
-    getJson<{ mode: OperatingMode }>("/api/status", statusController.signal)
-      .then((status) => setMode(status.mode))
+    getJson<{
+      mode: OperatingMode;
+      capabilities?: { groupCreation?: boolean };
+    }>("/api/status", statusController.signal)
+      .then((status) => {
+        setMode(status.mode);
+        setGroupCreationAvailable(status.capabilities?.groupCreation === true);
+      })
       .catch(() => {});
     return () => {
       statusController.abort();
@@ -89,7 +97,7 @@ function App() {
           <span>▦</span> Service catalog <span className="nav-dot" />
         </a>
         <div className="sidebar-context">
-          <span className="tiny-dot" /> HARRI PREP<p>Read-only environment</p>
+          <span className="tiny-dot" /> HARRI PREP<p>Local QA workspace</p>
         </div>
         <div className="sidebar-bottom">
           <div className="avatar">QA</div>
@@ -105,7 +113,7 @@ function App() {
             <span className="slash">/</span>Brand Service Manager
           </div>
           <div className="header-badges">
-            <span className="readonly">◉ Read only</span>
+            <span className="readonly">◉ Local QA tool</span>
             <span className={`mode-badge ${mode === "live" ? "live" : ""}`}>
               <i />
               {mode ? `${mode.toUpperCase()} MODE` : "CONNECTING"}
@@ -195,6 +203,14 @@ function App() {
             </form>
           </section>
           {brandResult && <BrandOverview result={brandResult} />}
+          {brandResult && (
+            <GroupDraft
+              key={brandResult.brand.id}
+              brandId={brandResult.brand.id}
+              mode={brandResult.mode}
+              creationAvailable={groupCreationAvailable}
+            />
+          )}
           {brandError && (
             <div className="brand-error" role="alert">
               <strong>
@@ -431,9 +447,7 @@ function App() {
             <span>
               Harri Brand Service Manager <b>v0.1</b>
             </span>
-            <span>
-              Internal QA tooling · Read only · No activation operations
-            </span>
+            <span>Internal QA tooling · Service activation is unavailable</span>
           </footer>
         </main>
       </div>

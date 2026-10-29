@@ -21,3 +21,10 @@ test('live uses observed paths, sends selected location and verifies group', asy
  assert.deepEqual(payload,{provider_type:'MULTIPLE',name:'Group',provider:'YUM',brands:[{id:18620836}],allow_employees_sso_login:false});
  assert.ok(urls.some(x=>x.includes('types=GP-1')));
 });
+
+test('a location cannot be reused in another group of the same Brand', async () => {
+ const m=new SsoManager(readConfig({}));
+ await m.create('1',{name:'First',provider:'YUM',locationIds:[18620836]});
+ await assert.rejects(m.create('1',{name:'Second',provider:'MCD',locationIds:[18620836]}), (error: any) => error.code === 'LOCATION_ALREADY_ASSIGNED');
+ assert.equal((await m.load('1')).groups.length,1);
+});

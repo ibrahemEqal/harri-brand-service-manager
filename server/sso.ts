@@ -18,6 +18,7 @@ function groups(body: unknown): Group[] { const v=data(body).groups; if (!Array.
 export class SsoManager {
   private mockGroups = new Map<string, Group[]>();
   private attempts = new Set<string>();
+  private reservedLocations = new Set<string>();
   constructor(private config: Config, private factory: Factory = opts => request.newContext(opts)) {}
   get available() { return this.config.mode === "mock" || (this.config.approved && this.config.groupWritesEnabled && !!this.config.groupAllowedBrandId); }
   private async context() { if (!this.config.approved) throw new ApiError(403,"LIVE_DISABLED","Live requests are disabled."); return this.factory({extraHTTPHeaders:this.config.headers,timeout:15000,ignoreHTTPSErrors:false}); }
@@ -41,20 +42,24 @@ export class SsoManager {
     const name=input.name.trim(), provider=input.provider, ids=input.locationIds as number[];
     const snapshot=await this.load(id);
     if (!snapshot.providers.some(p=>p.code===provider) || ids.some(x=>!snapshot.locations.some(l=>l.id===x))) throw new ApiError(400,"INVALID_SELECTION","Provider or locations are unavailable for this Brand.");
+    if (snapshot.groups.some(g=>g.brands.some(b=>ids.includes(b.id)))) throw new ApiError(409,"LOCATION_ALREADY_ASSIGNED","One or more selected locations already belong to an SSO group. Reload and choose available locations.");
     if (snapshot.groups.some(g=>g.name.toLowerCase()===name.toLowerCase())) throw new ApiError(409,"GROUP_EXISTS","A group with this name already exists.");
     const payload={provider_type:"MULTIPLE",name,provider,brands:ids.map(x=>({id:x})),allow_employees_sso_login:false};
     if (this.config.mode === "mock") { this.mockGroups.set(id, [...(this.mockGroups.get(id) ?? []), {id:Date.now(),name,provider,brands:snapshot.locations.filter(l=>ids.includes(l.id)),allow_employees_sso_login:false}]); return {status:"mock_success",message:"Simulated group created in mock mode."}; }
     const key=`${id}:${name.toLowerCase()}`;
     if (this.attempts.has(key)) throw new ApiError(409,"PREVIOUS_ATTEMPT","Check Harri before retrying this group name.");
+    const locationKeys=ids.map(location => `${id}:${location}`);
+    if (locationKeys.some(k=>this.reservedLocations.has(k))) throw new ApiError(409,"LOCATION_PENDING","A selected location has a pending or unverified creation. Check BAM before proceeding.");
+    locationKeys.forEach(k=>this.reservedLocations.add(k));
     this.attempts.add(key);
     let ctx: Context | undefined;
     try {
       ctx=await this.context();
       const response=await ctx.post(`${root}/account-management/api/v1/admin/brands/${id}/services/SSO/settings/groups`,{data:payload,maxRedirects:0});
-      if (!response.ok()) { if (response.status() >= 400 && response.status() < 500 && ![408,429].includes(response.status())) { this.attempts.delete(key); return {status:"rejected",message:`Harri rejected the request (HTTP ${response.status()}).`}; } return {status:"uncertain",message:`HTTP ${response.status()}; check Harri before retrying.`}; }
+      if (!response.ok()) { if (response.status() >= 400 && response.status() < 500 && ![408,429].includes(response.status())) { this.attempts.delete(key); locationKeys.forEach(k=>this.reservedLocations.delete(k)); return {status:"rejected",message:`Harri rejected the request (HTTP ${response.status()}).`}; } return {status:"uncertain",message:`HTTP ${response.status()}; check Harri before retrying.`}; }
       let body: unknown; try { body=await response.json(); } catch { return {status:"uncertain",message:"Unexpected response; check Harri before retrying."}; }
       if (!object(body) || body.data !== "service group settings created successfully") return {status:"uncertain",message:"Unexpected response; check Harri before retrying."};
-      try { const list=groups(await this.read(ctx,`${root}/account-management/api/v1/admin/brands/${id}/services/SSO/settings/groups`)); const match=list.find(g=>g.name===name && g.provider===provider && g.allow_employees_sso_login===false && g.brands.length===ids.length && ids.every(i=>g.brands.some(b=>b.id===i))); return match ? {status:"verified",message:`Group created and verified in Harri (ID ${match.id}).`} : {status:"acknowledged",message:"Harri accepted the request, but the group could not be verified yet."}; } catch { return {status:"acknowledged",message:"Harri accepted the request, but verification failed. Check Group Management."}; }
+      try { const list=groups(await this.read(ctx,`${root}/account-management/api/v1/admin/brands/${id}/services/SSO/settings/groups`)); const match=list.find(g=>g.name===name && g.provider===provider && g.allow_employees_sso_login===false && g.brands.length===ids.length && ids.every(i=>g.brands.some(b=>b.id===i))); if (match) locationKeys.forEach(k=>this.reservedLocations.delete(k)); return match ? {status:"verified",message:`Group created and verified in Harri (ID ${match.id}).`} : {status:"acknowledged",message:"Harri accepted the request, but the group could not be verified yet."}; } catch { return {status:"acknowledged",message:"Harri accepted the request, but verification failed. Check Group Management."}; }
     } catch { return {status:"uncertain",message:"Request outcome is unknown. Check Harri before retrying."}; } finally { await ctx?.dispose().catch(()=>{}); }
   }
 }

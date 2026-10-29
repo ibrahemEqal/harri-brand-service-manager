@@ -12,6 +12,7 @@ test("auto generate and simulate one-click export without Harri requests", async
     await route.continue();
   });
   await page.goto("/");
+  await page.getByRole("button", {name: "Scheduling Group"}).click();
   await expect(page.getByText("MOCK MODE")).toBeVisible();
   await page.getByLabel("Brand ID").fill("18619889");
   await page.getByRole("button", { name: "Load Brand" }).click();
@@ -47,6 +48,7 @@ test("auto generate and simulate one-click export without Harri requests", async
 });
 test("invalid Brand never generates a group", async ({ page }) => {
   await page.goto("/");
+  await page.getByRole("button", {name: "Scheduling Group"}).click();
   await page.getByLabel("Brand ID").fill("999");
   await page.getByRole("button", { name: "Load Brand" }).click();
   await expect(page.getByRole("alert")).toContainText(

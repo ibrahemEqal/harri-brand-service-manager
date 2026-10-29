@@ -615,3 +615,9 @@ footer span {
 .sso-hint { margin-top: 12px; }
 .sso-existing { border-top: 1px solid #edf2f1; padding: 14px 0; }
 @media (max-width: 640px) { .sidebar { position: static; display: flex; width: 100%; padding: 12px 16px; flex-direction: row; align-items: center; gap: 8px; } .shell { display: block; } .sidebar .logo { font-size: 24px; } .sidebar .logo small, .sidebar .side-label, .sidebar .side-footer { display: none; } .sidebar .nav-item { width: auto; padding: 9px; font-size: 13px; } }
+.generate-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.generate-controls label { font-weight: 700; }
+.generate-controls input { width: 85px; padding: 10px; border: 1px solid #ccdcd9; border-radius: 8px; font: inherit; }
+.draft-card { border: 1px solid #dfe9e7; border-radius: 10px; padding: 20px; margin: 20px 0; }
+.draft-card h3 { margin: 0; }
+.draft-card .sso-fields { margin: 18px 0 0; }

@@ -3,12 +3,14 @@ import { createServer } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import { createApp } from "../server/app.ts";
 import { BrandClient } from "../server/brand-client.ts";
+import { SsoManager } from "../server/sso.ts";
 import { GroupManager } from "../server/groups.ts";
 import { readConfig } from "../server/config.ts";
 const config = readConfig({ HARRI_MODE: "mock" });
 const backend = createApp(
   new BrandClient(config),
   new GroupManager(config),
+  new SsoManager(config),
 ).listen(3001, "127.0.0.1");
 await new Promise<void>((resolve) => backend.once("listening", resolve));
 const vite = await createServer({

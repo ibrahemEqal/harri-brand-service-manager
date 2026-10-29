@@ -602,3 +602,16 @@ footer span {
   outline: 3px solid #8bccc2;
   outline-offset: 2px;
 }
+
+.sidebar .nav-item { width: 100%; border: 0; background: transparent; color: #b8cecc; text-align: left; margin-bottom: 5px; }
+.sidebar .nav-item.active { background: #28514f; color: white; }
+.sso-fields { display: grid; gap: 20px; max-width: 520px; margin: 24px 0; }
+.sso-fields > label { display: grid; gap: 8px; font-weight: 700; }
+.sso-fields input:not([type=checkbox]), .sso-fields select { width: 100%; padding: 12px; border: 1px solid #ccdcd9; border-radius: 8px; background: white; font: inherit; }
+.sso-fields fieldset { border: 1px solid #ccdcd9; border-radius: 8px; padding: 15px; }
+.sso-fields legend { font-weight: 700; }
+.location { display: flex; gap: 10px; padding: 8px; align-items: center; }
+.location input { width: 18px; height: 18px; }
+.sso-hint { margin-top: 12px; }
+.sso-existing { border-top: 1px solid #edf2f1; padding: 14px 0; }
+@media (max-width: 640px) { .sidebar { position: static; display: flex; width: 100%; padding: 12px 16px; flex-direction: row; align-items: center; gap: 8px; } .shell { display: block; } .sidebar .logo { font-size: 24px; } .sidebar .logo small, .sidebar .side-label, .sidebar .side-footer { display: none; } .sidebar .nav-item { width: auto; padding: 9px; font-size: 13px; } }

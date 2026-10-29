@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { SsoPage } from "./components/SsoPage.tsx";
 import { GroupDraft } from "./components/GroupDraft.tsx";
 import { getJson } from "./api.ts";
 import type { BrandResponse, OperatingMode } from "../shared/brand.ts";
 import "./style.css";
 function App() {
+  const [page, setPage] = useState<"sso" | "scheduling">("sso");
   const [mode, setMode] = useState<OperatingMode | null>(null),
     [available, setAvailable] = useState(false),
     [brandId, setBrandId] = useState(""),
@@ -61,9 +63,8 @@ function App() {
           harri<small>QA WORKSPACE</small>
         </div>
         <div className="side-label">TOOLS</div>
-        <div className="nav-item">
-          ▦ <span>Group Creator</span>
-        </div>
+        <button className={`nav-item ${page === "sso" ? "active" : ""}`} onClick={() => setPage("sso")}>SSO Group</button>
+        <button className={`nav-item ${page === "scheduling" ? "active" : ""}`} onClick={() => setPage("scheduling")}>Scheduling Group</button>
         <div className="side-footer">
           Harri Prep <span>·</span> Local tool
         </div>
@@ -71,7 +72,7 @@ function App() {
       <div className="workspace">
         <header>
           <div>
-            Workspace <span>/</span> <strong>Group Creator</strong>
+            Workspace <span>/</span> <strong>{page === "sso" ? "SSO Group" : "Scheduling Group"}</strong>
           </div>
           <span className={`mode ${mode === "live" ? "live" : ""}`}>
             <i />
@@ -79,6 +80,7 @@ function App() {
           </span>
         </header>
         <main>
+          {page === "sso" ? <SsoPage /> : <>
           <div className="heading">
             <div className="eyebrow">TEAM SCHEDULING / GROUP MANAGEMENT</div>
             <h1>Create a Group in one click</h1>
@@ -156,6 +158,7 @@ function App() {
               <p>Load a Brand to automatically prepare a Group.</p>
             </div>
           )}
+          </>}
           <footer>
             Harri Group Creator · Test environment{" "}
             <span>SSO status must be verified manually.</span>

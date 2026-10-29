@@ -1,9 +1,10 @@
+import { SsoManager } from "./sso.ts";
 import { createApp } from "./app.ts";
 import { GroupManager } from "./groups.ts";
 import { BrandClient } from "./brand-client.ts";
 import { loadRuntimeConfig, safeAuthSummary } from "./runtime-config.ts";
 const { config, source } = loadRuntimeConfig();
-const server = createApp(new BrandClient(config), new GroupManager(config));
+const server = createApp(new BrandClient(config), new GroupManager(config), new SsoManager(config));
 server
   .listen(config.port, "127.0.0.1", () => {
     console.log(

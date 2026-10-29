@@ -2,10 +2,12 @@ import express from "express";
 import { validateBrandId } from "./brand.ts";
 import type { GroupManager } from "./groups.ts";
 import { ApiError } from "./errors.ts";
+import type { SsoManager } from "./sso.ts";
 import type { BrandClient } from "./brand-client.ts";
 export function createApp(
   client: Pick<BrandClient, "mode" | "loadBrand">,
   groups?: GroupManager,
+  sso?: SsoManager,
 ) {
   const app = express();
   app.disable("x-powered-by");
@@ -36,7 +38,7 @@ export function createApp(
     const isGroupAction =
       req.method === "POST" &&
       groups &&
-      ["/api/groups/preview", "/api/groups/execute"].includes(req.path);
+      ["/api/groups/preview", "/api/groups/execute", "/api/sso/groups"].includes(req.path) && (req.path !== "/api/sso/groups" || !!sso);
     if (isGroupAction && !req.headers.origin)
       return res.status(403).json({
         code: "ORIGIN_REQUIRED",
@@ -81,6 +83,10 @@ export function createApp(
           ),
         ),
     );
+  }
+  if (sso) {
+    app.get("/api/sso", async (req, res) => res.json(await sso.load(req.query.brandId)));
+    app.post("/api/sso/groups", express.json({limit: "16kb"}), async (req, res) => res.json(await sso.create(req.body?.brandId, req.body)));
   }
   app.use("/api", (_req, res) =>
     res.status(404).json({ code: "NOT_FOUND", error: "Unknown endpoint." }),
